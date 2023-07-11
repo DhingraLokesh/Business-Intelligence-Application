@@ -13,8 +13,15 @@ dotenv.config({
 const envVarsSchema = Joi.object()
   .keys({
     PORT: Joi.number().default(5000),
-    NODE_ENV: Joi.string().default("development"),
     MONGODB_URL: Joi.string().required().description("Mongo DB url"),
+    HOST_URL: Joi.string().required().description("Host url"),
+    JWT_SECRET: Joi.string().required().description("JWT secret key"),
+    JWT_ACCESS_EXPIRATION_MINUTES: Joi.string()
+      .required()
+      .description("JWT access expiration minutes"),
+    JWT_REFRESH_EXPIRATION_DAYS: Joi.string()
+      .required()
+      .description("JWT refresh expiration days"),
   })
   .unknown();
 
@@ -27,10 +34,17 @@ if (error) {
 }
 
 const config = {
-  env:envVars.NODE_ENV,
+  env: envVars.NODE_ENV,
   port: envVars.PORT,
+  hostURL: envVars.HOST_URL,
   mongoose: {
     url: envVars.MONGODB_URL,
+  },
+  jwt: {
+    secret: envVars.JWT_SECRET,
+    accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
+    refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
+    resetPasswordExpirationMinutes: 60,
   },
 };
 
