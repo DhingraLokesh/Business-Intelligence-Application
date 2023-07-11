@@ -12,7 +12,8 @@ dotenv.config({
 
 const envVarsSchema = Joi.object()
   .keys({
-    PORT: Joi.number().default(3000),
+    PORT: Joi.number().default(5000),
+    NODE_ENV: Joi.string().default("development"),
     MONGODB_URL: Joi.string().required().description("Mongo DB url"),
   })
   .unknown();
@@ -26,6 +27,7 @@ if (error) {
 }
 
 const config = {
+  env:envVars.NODE_ENV,
   port: envVars.PORT,
   mongoose: {
     url: envVars.MONGODB_URL,
