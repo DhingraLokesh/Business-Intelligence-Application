@@ -47,7 +47,7 @@ const getUserByEmail = async (email, wantPassword = false) => {
 
 // get all projects of user
 const getUsersProject = async (userId) => {
-  const projects = await projectUserModel.find({ user: userId });
+  const projects = await projectUserModel.find({ user: userId }).populate("project");
   if (!projects) {
     throw new ApiError(404, "No Projects Found");
   }

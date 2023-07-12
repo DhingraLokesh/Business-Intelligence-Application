@@ -31,11 +31,11 @@ const deleteUserById = catchAsync(async (req, res) => {
   res.send(allUsers);
 });
 
+// get all projects of user
 const getUsersProject = catchAsync(async (req, res) => {
   const users = await userService.getUsersProject(req.loggedInUserId);
   res.send(users);
 });
-
 export {
   getAllUsers,
   getUserById,

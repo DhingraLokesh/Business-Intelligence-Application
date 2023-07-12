@@ -49,20 +49,13 @@ const generateAuthTokens = async (user) => {
     currentDate.getTime() + config.jwt.accessExpirationMinutes * 60 * 1000
   );
   const accessToken = generateToken(user.id, accessTokenExpires);
-  const refreshTokenExpires = new Date(
-    currentDate.getTime() + config.jwt.refreshExpirationDays * 60 * 60 * 1000
-  );
-  const refreshToken = generateToken(user.id, refreshTokenExpires);
-  await saveToken(refreshToken, user.id, refreshTokenExpires, "refresh");
+
+  await saveToken(accessToken, user.id, accessTokenExpires, "access");
 
   return {
     access: {
       token: accessToken,
       expires: accessTokenExpires.toISOString(),
-    },
-    refresh: {
-      token: refreshToken,
-      expires: refreshTokenExpires.toISOString(),
     },
   };
 };
