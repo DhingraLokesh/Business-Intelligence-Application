@@ -28,7 +28,7 @@ const login = async (loginBody) => {
     throw new ApiError(404, "user not exists !!");
   }
 
-  if (user.authenticate(loginBody.password)) {
+  if (await user.authenticate(loginBody.password)) {
     const tokens = await tokenService.generateAuthTokens(user);
 
     return {
