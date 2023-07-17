@@ -56,7 +56,7 @@ const generateAuthTokens = async (user) => {
     access: {
       token: accessToken,
       expires: accessTokenExpires.toISOString(),
-    },
+    }
   };
 };
 

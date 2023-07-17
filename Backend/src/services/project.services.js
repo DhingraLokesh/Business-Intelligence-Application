@@ -1,6 +1,9 @@
-import { projectUserModel, projectModel } from "../models/index.js";
+import { projectUserModel, projectModel, userModel } from "../models/index.js";
 import ApiError from "../utils/api-error/index.js";
 import checkRole from "../utils/general/check-role.js";
+import path from "path";
+import fs from "fs";
+import xlsx from "xlsx";
 
 // create project
 const createProject = async (userId, body) => {
@@ -19,6 +22,14 @@ const createProject = async (userId, body) => {
     throw new ApiError(500, "Internal Sever Error");
   }
   return newProject;
+};
+
+// update project
+const updateProject = async (body) => {
+  const { projectId } = body;
+  const project = await projectModel.findByIdAndUpdate(projectId, body);
+  if (!project) throw new ApiError(404, "Project not found");
+  return project;
 };
 
 // get all projects in DB
@@ -40,19 +51,14 @@ const findProjectById = async (projectId) => {
 };
 
 // add single user to project with role
-const addUserToProject = async (projectId, userId, newUserId, role) => {
-  const resp = await checkRole(projectId, userId, ["owner"]);
-
-  if (!resp) {
-    throw new ApiError(401, "Unauthorized !!");
-  }
-
+const addUserToProject = async (projectId, newUserId, role) => {
   const projectUser = await projectUserModel.findOne({
     user: newUserId,
     project: projectId,
   });
+
   if (projectUser) {
-    throw new ApiError(400, "User Already added in the project");
+    throw new ApiError(400, "User already in project");
   }
 
   const newProjectUser = await projectUserModel();
@@ -133,15 +139,78 @@ const getUsersOfProjectByRole = async (projectId, role) => {
 
 // get all users of a single project
 const getUsersOfProject = async (projectId) => {
-  const ProjectUsers = await projectUserModel.find({ project: projectId });
+  const ProjectUsers = await projectUserModel
+    .find({ project: projectId })
+    .populate([
+      {
+        path: "user",
+        model: "User",
+        select: "firstName lastName email username",
+      },
+    ]);
   if (!ProjectUsers) {
     throw new ApiError(404, "No User Found");
   }
   return ProjectUsers;
 };
 
+const getExcel = async (projectId) => {
+  const excelPath = path.join(
+    path.dirname(new URL(import.meta.url).pathname),
+    "../upload",
+    `${projectId}`
+  );
+  const supportedExtensions = [".csv", ".xls", ".xlsx"];
+  const excelFile = supportedExtensions.find((extension) =>
+    fs.existsSync(`${excelPath}${extension}`)
+  );
+
+  if (!excelFile) {
+    throw new ApiError(404, "Excel not found");
+  }
+
+  const workbook = xlsx.readFile(`${excelPath}${excelFile}`);
+
+  // Read the first sheet
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+
+  // Convert the sheet data to JSON
+  const jsonData = xlsx.utils.sheet_to_json(worksheet);
+  console.log("Excel file converted to JSON.");
+  return jsonData;
+
+  /*
+  const supportedExtensions = [".csv", ".xls", ".xlsx"];
+  const excelFile = supportedExtensions.find((extension) =>
+    fs.existsSync(`${excelPath}${extension}`)
+  );
+
+  if (!excelFile) {
+    throw new ApiError(404, "Excel not found");
+  }
+
+  const contentType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+  return new Promise((resolve, reject) => {
+    fs.readFile(`${excelPath}${excelFile}`, (err, data) => {
+      if (err) {
+        reject(new ApiError(500, "Failed to read Excel"));
+      } else {
+        resolve({
+          contentType,
+          data:
+            `data:${contentType};base64,` +
+            Buffer.from(data).toString("base64"),
+        });
+      }
+    });
+  });*/
+};
+
 export {
   createProject,
+  updateProject,
   findAllProjects,
   findProjectById,
   addUserToProject,
@@ -149,4 +218,5 @@ export {
   getUsersOfProjectByRole,
   removeUserFromProject,
   updateUserRoleInProject,
+  getExcel,
 };

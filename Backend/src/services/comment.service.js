@@ -30,7 +30,7 @@ const getCommentsOfProject = async (projectId) => {
       {
         path: "user",
         model: "User",
-        select: "name",
+        select: "username",
       },
     ]);
   return comments;

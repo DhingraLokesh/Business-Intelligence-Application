@@ -10,19 +10,40 @@ const router = express.Router();
 router
   .route("/create")
   .post(
-    auth("createProject"),
-    validate(projectValidate.createProject),
+    auth(),
     projectController.createProject
+  );
+  
+  router
+  .route("/upload/:projectId")
+  .post(
+    auth(),
+    projectController.uploadFileController
+  );
+
+  router
+  .route("/get-excel/:projectId")
+  .get(
+    auth(),
+    projectController.getExcelController
+  );
+
+  router
+  .route("/update")
+  .patch(
+    auth(),
+    validate(projectValidate.updateProject),
+    projectController.updateProject
   );
 
 // get all projects in DB
-router.route("/get-all").get(auth("findAllProjects"), projectController.findAllProjects);
+router.route("/get-all").get(auth(), projectController.findAllProjects);
 
 // get single project with id
 router
   .route("/get/:projectId")
   .get(
-    auth("findProjectById"),
+    auth(),
     validate(projectValidate.findProjectById),
     projectController.findProjectById
   );
@@ -31,7 +52,7 @@ router
 router
   .route("/add-user")
   .post(
-    auth("addUserToProject"),
+    auth(),
     validate(projectValidate.addUserToProject),
     projectController.addUserToProject
   );
@@ -40,7 +61,7 @@ router
 router
   .route("/remove-user")
   .delete(
-    auth("removeUserFromProject"),
+    auth(),
     validate(projectValidate.removeUserFromProject),
     projectController.removeUserFromProject
   );
@@ -48,7 +69,7 @@ router
 router
   .route("/update-user-role")
   .patch(
-    auth("updateUserRoleInProject"),
+    auth(),
     validate(projectValidate.updateUserRoleInProject),
     projectController.updateUserRoleInProject
   );
@@ -57,7 +78,7 @@ router
 router
   .route("/get-users-by-role")
   .get(
-    auth("getUsersOfProjectByRole"),
+    auth(),
     validate(projectValidate.getUsersOfProjectByRole),
     projectController.getUsersOfProjectByRole
   );
@@ -66,7 +87,7 @@ router
 router
   .route("/get-users/:projectId")
   .get(
-    auth("getUsersOfProject"),
+    auth(),
     validate(projectValidate.getUsersOfProject),
     projectController.getUsersOfProject
   );

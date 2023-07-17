@@ -8,6 +8,14 @@ const createProject = {
   }),
 };
 
+const updateProject = {
+  body: Joi.object().keys({
+    projectId: Joi.string().custom(objectId).required(),
+    name: Joi.string(),
+    description: Joi.string(),
+  }),
+};
+
 const findProjectById = {
   params: Joi.object().keys({
     projectId: Joi.string().custom(objectId).required(),
@@ -17,7 +25,7 @@ const findProjectById = {
 const addUserToProject = {
   body: Joi.object().keys({
     projectId: Joi.string().custom(objectId).required(),
-    userId: Joi.string().custom(objectId).required(),
+    userIds: Joi.array().items(Joi.custom(objectId)).required(),
     role: Joi.string().valid("editor", "commentor", "viewer").required(),
   }),
 };
@@ -50,6 +58,7 @@ const getUsersOfProject = {
 
 export {
   createProject,
+  updateProject,
   findProjectById,
   addUserToProject,
   getUsersOfProjectByRole,
