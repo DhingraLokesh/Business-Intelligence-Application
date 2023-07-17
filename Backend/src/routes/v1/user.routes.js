@@ -15,6 +15,12 @@ router
     validate(userValidate.getAnyUserById),
     userController.getAnyUserById
   );
+  router
+  .route("/upload")
+  .post(
+    auth(),
+    userController.uploadImageController
+  );
 
 router
   .route("/get-by-email")
@@ -25,6 +31,8 @@ router
   );
 
 router.route("/get").get(auth("getUserById"), userController.getUserById);
+
+router.route("/getImage").get(auth("getImageController"), userController.getImageController);
 
 router
   .route("/update")

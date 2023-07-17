@@ -6,10 +6,16 @@ import bcrypt from "bcrypt";
 const register = async (registerBody) => {
   registerBody.password = await bcrypt.hash(registerBody.password, 10);
 
-  const checkUser = await userService.getUserByEmail(registerBody.email);
+  let checkUser = await userService.getUserByEmail(registerBody.email);
 
   if (checkUser) {
-    throw new ApiError(400, "User already registered");
+    throw new ApiError(400, "User email already registered");
+  }
+
+  checkUser = await userService.getUserByUsername(registerBody.username);
+
+  if (checkUser) {
+    throw new ApiError(400, "Username already registered");
   }
 
   const user = await userService.createUser(registerBody);

@@ -1,5 +1,7 @@
 import catchAsync from "../utils/general/catch-async.js";
 import * as userService from "../services/user.service.js";
+import { uploadFile } from "../utils/general/multer.js";
+import ApiError from "../utils/api-error/index.js";
 
 const getAllUsers = catchAsync(async (req, res) => {
   const allUsers = await userService.getAllUsers();
@@ -11,6 +13,28 @@ const getUserById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+// upload File
+const uploadImageController = catchAsync(async (req, res) => {
+  try {
+    const image = await uploadFile(req, res, req.loggedInUserId);
+    console.log("Image uploaded", image);
+    res.status(200).send("Image uploaded successfully.");
+  } catch (error) {
+    console.log("error uploading Image ", error);
+    throw new ApiError(500, "Internal Sever Error");
+  }
+});
+// get File
+const getImageController = catchAsync(async (req, res) => {
+  try {
+    const image = await userService.getImage(req.loggedInUserId);
+    res.setHeader('Content-Type', image.contentType);
+    res.send(image.data);
+  } catch (error) {
+    console.log("error getting Image ", error);
+    throw new ApiError(500, "Internal Sever Error");
+  }
+});
 const getAnyUserById = catchAsync(async (req, res) => {
   const user = await userService.getAnyUserById(req.params.userId);
   res.send(user);
@@ -41,6 +65,8 @@ export {
   getUserById,
   updateUserById,
   deleteUserById,
+  uploadImageController,
+  getImageController,
   getUsersProject,
   getAnyUserById,
   getUserByEmail,

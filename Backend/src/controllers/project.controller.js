@@ -1,12 +1,44 @@
 import catchAsync from "../utils/general/catch-async.js";
 import * as projectServices from "../services/project.services.js";
-
+import { uploadFile } from "../utils/general/multer.js";
+import ApiError from "../utils/api-error/index.js";
 // create project
 const createProject = catchAsync(async (req, res) => {
+  console.log(req.body);
   const project = await projectServices.createProject(
     req.loggedInUserId,
     req.body
   );
+
+  res.send(project);
+});
+
+// upload File
+const uploadFileController = catchAsync(async (req, res) => {
+  try {
+    const file = await uploadFile(req, res, req.params.projectId);
+    console.log("file uploaded", file);
+    res.status(200).send("File uploaded successfully.");
+  } catch (error) {
+    console.log("error uploading file ", error);
+    throw new ApiError(500, "Internal Sever Error");
+  }
+});
+
+// get File
+const getExcelController = catchAsync(async (req, res) => {
+  try {
+    const excel = await projectServices.getExcel(req.params.projectId);
+    res.send(excel);
+  } catch (error) {
+    console.log("error getting excel ", error);
+    throw new ApiError(500, "Internal Sever Error");
+  }
+});
+
+// update project
+const updateProject = catchAsync(async (req, res) => {
+  const project = await projectServices.updateProject(req.body);
   res.send(project);
 });
 
@@ -26,8 +58,7 @@ const findProjectById = catchAsync(async (req, res) => {
 const addUserToProject = catchAsync(async (req, res) => {
   const user = await projectServices.addUserToProject(
     req.body.projectId,
-    req.loggedInUserId,
-    req.body.userId,
+    req.body.newUserId,
     req.body.role
   );
   res.send(user);
@@ -71,11 +102,14 @@ const getUsersOfProject = catchAsync(async (req, res) => {
 
 export {
   createProject,
+  updateProject,
   findAllProjects,
   findProjectById,
   addUserToProject,
   getUsersOfProject,
+  uploadFileController,
   getUsersOfProjectByRole,
   removeUserFromProject,
   updateUserRoleInProject,
+  getExcelController,
 };

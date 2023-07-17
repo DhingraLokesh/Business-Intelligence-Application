@@ -1,0 +1,82 @@
+
+
+/* Add any other styles as needed */
+
+.comment-sidebar {
+  position: fixed;
+  /* top: 77px; Adjust the top position as needed */
+  right: -300px; /* Shift the sidebar to the right */
+  width: 350px;
+  height: 80%;
+  background-color: #fff;
+  border-left: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(0);
+  display: flex;
+  flex-direction: column;
+  bottom : 0;
+}
+
+.comment-sidebar.right {
+  right: 0; /* Keep the sidebar on the right side */
+}
+
+.comment-sidebar.open {
+  transform: translateX(300px); /* Adjust the width of the sidebar */
+}
+
+.comment-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+}
+.list-group-item {
+  font-size: 0.9rem; /* Adjust the size as needed */
+}
+
+.comment-sidebar-header h3 {
+  margin: 0;
+}
+
+.comment-sidebar-content {
+  flex-grow: 1;
+  display: flex;
+  size: 3px;
+  flex-direction: column;
+  padding: 20px;
+}
+.comment-sidebar-title {
+  font-size: 1rem; /* Adjust the size as needed */
+}
+
+.comment-sidebar-content ul {
+  flex-grow: 1;
+}
+
+.comment-sidebar-content .comment-form {
+  margin-top: auto;
+  position: sticky;
+  bottom : 0;
+  background-color: #fff;
+  padding: 10px 0;
+}
+
+.comment-sidebar-content .comment-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.comment-sidebar-content .comment-input-group .comments-form-control {
+  flex-grow: 1;
+  border-radius: 0;
+}
+
+.comment-sidebar-content .comment-input-group .btn {
+  border-radius: 0;
+  margin-top: 20px;
+  margin-left: 10px;
+}

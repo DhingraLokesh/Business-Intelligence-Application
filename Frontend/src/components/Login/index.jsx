@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import { login } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Spinner } from "react-bootstrap";
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
-  const { error, message } = useSelector((state) => state.auth);
+  const { errorMessage, loadingMessage } = useSelector(
+    (state) => state.auth.login
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,8 +22,8 @@ const Login = () => {
     e.preventDefault();
     const resp = await dispatch(login(data));
     if (resp.type.includes("fulfilled")) {
-        navigate("/projects");
-        window.location.reload();
+      navigate("/projects");
+      window.location.reload();
     }
   };
 
@@ -48,9 +51,24 @@ const Login = () => {
               required
               className={styles.input}
             />
-            {error && <div className={styles.error_msg}>{message}</div>}
+            {errorMessage && (
+              <div className={styles.error_msg}>{errorMessage}</div>
+            )}
             <button type="submit" className={styles.green_btn}>
               Sign In
+              {loadingMessage && (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  style={{
+                    marginLeft: "20px",
+                    paddingTop: "5px",
+                  }}
+                />
+              )}
             </button>
           </form>
         </div>

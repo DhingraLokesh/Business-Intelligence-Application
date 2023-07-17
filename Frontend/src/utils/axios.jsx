@@ -13,3 +13,4 @@ const axiosInstance = (isJSON = true) => {
 };
 
 export default axiosInstance;
+

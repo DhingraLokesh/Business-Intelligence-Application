@@ -3,7 +3,15 @@ import { objectId } from './custom.validation.js';
 
 const  updateUser = {
     body: Joi.object().keys({
-      name: Joi.string().required(),
+      firstName: Joi.string(),
+      lastName: Joi.string(),
+      email: Joi.string(),
+      username: Joi.string(),
+      address: Joi.string(),
+      about: Joi.string(),
+      city: Joi.string(),
+      country: Joi.string(),
+      pinCode: Joi.string(),
     }),
   };
 const getAnyUserById = {
