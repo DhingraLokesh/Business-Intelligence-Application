@@ -54,6 +54,16 @@ function User() {
   }, [user]);
 
   const handleChange = ({ currentTarget: input }) => {
+    if (input.username.length < 4 || input.username.length > 16) {
+      alert("username length should be between 3 and 15 characters.");
+      return;
+    }
+
+    if (input.password.length < 7 || input.password.length > 1) {
+      alert("length should be between 6 and 11 characters.");
+      return;
+    }
+
     setData({ ...data, [input.name]: input.value });
   };
 

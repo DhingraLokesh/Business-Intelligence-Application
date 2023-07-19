@@ -1,5 +1,3 @@
-
-
 /* Add any other styles as needed */
 
 .comment-sidebar {
@@ -16,7 +14,7 @@
   transform: translateX(0);
   display: flex;
   flex-direction: column;
-  bottom : 0;
+  bottom: 0;
 }
 
 .comment-sidebar.right {
@@ -60,7 +58,7 @@
 .comment-sidebar-content .comment-form {
   margin-top: auto;
   position: sticky;
-  bottom : 0;
+  bottom: 0;
   background-color: #fff;
   padding: 10px 0;
 }
