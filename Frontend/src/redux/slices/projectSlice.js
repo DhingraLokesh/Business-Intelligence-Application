@@ -26,6 +26,12 @@ const initialState = {
     loadingMessage: null,
     errorMessage: null,
   },
+  projectUser: {
+    data: [],
+    loading: false,
+    loadingMessage: null,
+    errorMessage: null,
+  },
   newProject: {
     loading: false,
     loadingMessage: null,
@@ -125,6 +131,21 @@ const projectSlice = createSlice({
       .addCase(getExcel.rejected, (state, action) => {
         state.excel.loading = false;
         state.excel.errorMessage = action?.payload?.message;
+      })
+      .addCase(getProjectUser.pending, (state) => {
+        state.projectUser.loading = true;
+        state.projectUser.loadingMessage = "Getting project user ...";
+        state.projectUser.errorMessage = null;
+      })
+      .addCase(getProjectUser.fulfilled, (state, action) => {
+        state.projectUser.loading = false;
+        state.projectUser.data = action.payload;
+        state.projectUser.loadingMessage = null;
+        state.projectUser.errorMessage = null;
+      })
+      .addCase(getProjectUser.rejected, (state, action) => {
+        state.projectUser.loading = false;
+        state.projectUser.errorMessage = action?.payload?.message;
       });
   },
 });
@@ -149,6 +170,18 @@ export const uploadExcel = createAsyncThunk(
         `/projects/upload/${payload.projectId}`,
         payload.formData
       );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getProjectUser = createAsyncThunk(
+  "projects/getProjectUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await axios().get(`/projects/get-user/${payload}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);

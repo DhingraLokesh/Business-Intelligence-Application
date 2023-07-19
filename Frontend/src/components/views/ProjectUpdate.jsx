@@ -174,6 +174,9 @@ function ProjectUpdate() {
               <Card className="card-user mt-4">
                 <Card.Header>
                   <Card.Title as="h4">Add User</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    Send request to user to join project
+                  </Card.Subtitle>
                 </Card.Header>
                 <Card.Body>
                   <div
