@@ -6,7 +6,7 @@ import * as userRequestValidate from "../../validations/user-request.validation.
 
 const router = express.Router();
 
-// create project
+// route to send request to join project
 router
   .route("/send")
   .post(
@@ -15,7 +15,8 @@ router
     userRequestController.sendRequestToJoinProject
   );
 
-  router
+// route to handle request sent by a user
+router
   .route("/handle")
   .post(
     auth("handleRequestToJoinProject"),
@@ -23,7 +24,9 @@ router
     userRequestController.handleRequestToJoinProject
   );
 
-router.route("/get-all").get(auth("getAllRequests"), userRequestController.getAllRequests);
-
+// route to get all requests sent and received by user
+router
+  .route("/get-all")
+  .get(auth("getAllRequests"), userRequestController.getAllRequests);
 
 export default router;
