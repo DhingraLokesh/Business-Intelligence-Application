@@ -7,9 +7,7 @@ import { Spinner } from "react-bootstrap";
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
-  const { errorMessage, loadingMessage } = useSelector(
-    (state) => state.auth.login
-  );
+  const { errorMessage, loading } = useSelector((state) => state.auth.login);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,9 +19,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resp = await dispatch(login(data));
-    if (resp.type.includes("fulfilled")) {
+    if (resp?.type?.includes("fulfilled")) {
       navigate("/projects");
-      window.location.reload();
     }
   };
 
@@ -56,7 +53,7 @@ const Login = () => {
             )}
             <button type="submit" className={styles.green_btn}>
               Sign In
-              {loadingMessage && (
+              {loading && (
                 <Spinner
                   as="span"
                   animation="border"

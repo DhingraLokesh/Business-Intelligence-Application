@@ -13,7 +13,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const { errorMessage, loadingMessage } = useSelector(
+  const { errorMessage, loading } = useSelector(
     (state) => state.auth.register
   );
 
@@ -96,7 +96,7 @@ const Signup = () => {
             )}
             <button type="submit" className={styles.green_btn}>
               Sign Up
-              {loadingMessage && (
+              {loading && (
                 <Spinner
                   as="span"
                   animation="border"

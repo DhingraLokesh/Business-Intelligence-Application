@@ -1,15 +1,15 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import ProjectDashboard from "./components/views/ProjectDashboard";
-import UserProfile from "./components/views/UserProfile";
-import Projects from "./components/views/Projects";
-import ProjectUpdate from "./components/views/ProjectUpdate";
-import ProjectCreate from "./components/views/ProjectCreate";
-import Navbar from "./components/Navbars/Navbar";
+import ProjectDashboard from "./components/ProjectComponents/Projects/ProjectDashboard";
+import UserProfile from "./components/UserProfile";
+import Projects from "./components/ProjectComponents/Projects";
+import ProjectUpdate from "./components/ProjectComponents/Projects/ProjectUpdate";
+import ProjectCreate from "./components/ProjectComponents/Projects/ProjectCreate";
+import Navbar from "./components/Navbar";
 import { useSelector } from "react-redux";
-import Requests from "./components/views/Requests";
-import ViewExcel from "./components/views/ViewExcel";
+import Requests from "./components/ProjectComponents/Requests";
+import ViewExcel from "./components/ProjectComponents/ViewExcel";
 import Loader from "./components/Loader";
 function App() {
   const user = localStorage.getItem("token");

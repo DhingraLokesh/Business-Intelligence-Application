@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import defaultAvatar from "../../assets/img/default-avatar.png";
-
+import "../ProjectComponents/Projects/index.css";
 // react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import {
 } from "../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
+import Swal from "sweetalert2";
 
 function User() {
   const dispatch = useDispatch();
@@ -54,16 +55,6 @@ function User() {
   }, [user]);
 
   const handleChange = ({ currentTarget: input }) => {
-    if (input.username.length < 4 || input.username.length > 16) {
-      alert("username length should be between 3 and 15 characters.");
-      return;
-    }
-
-    if (input.password.length < 7 || input.password.length > 1) {
-      alert("length should be between 6 and 11 characters.");
-      return;
-    }
-
     setData({ ...data, [input.name]: input.value });
   };
 
@@ -81,10 +72,20 @@ function User() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (data?.username?.length < 3 || data?.username?.length > 15) {
+      Swal.fire(
+        "Error!",
+        `username length should be between 3 and 15 characters. Current length is ${data?.username?.length}`,
+        "error"
+      );
+      return;
+    }
+
     const resp = await dispatch(updateUser(data));
 
     if (resp.meta.requestStatus === "fulfilled") {
-      window.location.reload();
+      dispatch(getUser());
     }
   };
 
@@ -129,7 +130,7 @@ function User() {
                         <Form.Group>
                           <label>Username</label>
                           <Form.Control
-                            defaultValue={data.username}
+                            value={data.username}
                             name="username"
                             onChange={handleChange}
                             placeholder="Username"
@@ -148,7 +149,7 @@ function User() {
                             name="email"
                             onChange={handleChange}
                             type="email"
-                            defaultValue={data.email}
+                            value={data.email}
                             required
                           ></Form.Control>
                         </Form.Group>
@@ -159,7 +160,7 @@ function User() {
                         <Form.Group>
                           <label>First Name</label>
                           <Form.Control
-                            defaultValue={data.firstName}
+                            value={data.firstName}
                             placeholder="First Name"
                             name="firstName"
                             onChange={handleChange}
@@ -172,7 +173,7 @@ function User() {
                         <Form.Group>
                           <label>Last Name</label>
                           <Form.Control
-                            defaultValue={data.lastName}
+                            value={data.lastName}
                             name="lastName"
                             onChange={handleChange}
                             placeholder="Last Name"
@@ -187,7 +188,7 @@ function User() {
                         <Form.Group>
                           <label>Address</label>
                           <Form.Control
-                            defaultValue={data.address || ""}
+                            value={data.address || ""}
                             placeholder="Address"
                             name="address"
                             onChange={handleChange}
@@ -201,7 +202,7 @@ function User() {
                         <Form.Group>
                           <label>City</label>
                           <Form.Control
-                            defaultValue={data.city || ""}
+                            value={data.city || ""}
                             placeholder="City"
                             name="city"
                             onChange={handleChange}
@@ -213,7 +214,7 @@ function User() {
                         <Form.Group>
                           <label>Country</label>
                           <Form.Control
-                            defaultValue={data.country || ""}
+                            value={data.country || ""}
                             placeholder="Country"
                             name="country"
                             onChange={handleChange}
@@ -226,7 +227,7 @@ function User() {
                           <label>PIN Code</label>
                           <Form.Control
                             placeholder="PIN Code"
-                            defaultValue={data.pinCode || ""}
+                            value={data.pinCode || ""}
                             name="pinCode"
                             onChange={handleChange}
                             type="text"
@@ -240,7 +241,7 @@ function User() {
                           <label>About Me</label>
                           <Form.Control
                             cols="80"
-                            defaultValue={data.about || ""}
+                            value={data.about || ""}
                             name="about"
                             onChange={handleChange}
                             placeholder="Tell us about yourself !!"
@@ -252,7 +253,7 @@ function User() {
                     </Row>
                     <div className="mt-3 text-center">
                       <Button
-                        className="btn-fill pull-right"
+                        className="btn-fill pull-right dashboardButton"
                         type="submit"
                         variant="success"
                       >
@@ -305,7 +306,7 @@ function User() {
                     </div>
 
                     <Button
-                      className="btn-fill mt-3"
+                      className="btn-fill mt-3 dashboardButton"
                       type="submit"
                       variant="success"
                       disabled={!(isImage && file)}

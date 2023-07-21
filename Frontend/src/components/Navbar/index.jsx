@@ -1,16 +1,25 @@
 import React from "react";
 import { Navbar, Container } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 function Header() {
   const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
+  const dispatch = useDispatch();
+
+  const handleLogout = async() => {
+    await dispatch(logout());
+    navigate("/login");
   };
 
   return (
-    <Navbar className="navbar-dark bg-dark mb-50">
+    <Navbar
+      className="navbar mb-50"
+      style={{
+        backgroundColor: "#00838d",
+      }}
+    >
       <Container fluid>
         <div className="d-flex text-black justify-content-center align-items-center ">
           <NavLink
@@ -44,10 +53,20 @@ function Header() {
             type="button"
             className="btn btn-success btn-sm mx-3"
             onClick={() => navigate("/project/create")}
+            style={{
+              backgroundColor: "#e6e2e2",
+              color: "#00838d",
+              fontWeight: 'bold'
+            }}
           >
             + Create
           </button>
-          <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+          <button style={{
+              backgroundColor: "#e6e2e2",
+              color: "red",
+              fontWeight: 'bold'
+            }}
+            className="btn btn-danger btn-sm" onClick={handleLogout}>
             Logout
           </button>
         </div>

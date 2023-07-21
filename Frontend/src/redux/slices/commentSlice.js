@@ -18,6 +18,11 @@ const initialState = {
 const commentSlice = createSlice({
   name: "comments",
   initialState,
+  reducers: {
+    addCommentSocket: (state, action) => {
+      state.allComments.data.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllComments.pending, (state) => {
@@ -76,4 +81,5 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const { addCommentSocket } = commentSlice.actions;
 export default commentSlice.reducer;
