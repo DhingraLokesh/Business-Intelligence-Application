@@ -19,6 +19,11 @@ const initialState = {
 const requestSlice = createSlice({
   name: "requests",
   initialState,
+  reducers: {
+    receiveSocketRequest(state, action) {
+      state.allRequests.receivedRequests.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(sendRequest.pending, (state) => {
@@ -89,5 +94,7 @@ export const getAllRequests = createAsyncThunk(
     }
   }
 );
+
+export const { receiveSocketRequest } = requestSlice.actions;
 
 export default requestSlice.reducer;

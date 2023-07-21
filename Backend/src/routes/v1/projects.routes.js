@@ -6,29 +6,21 @@ import * as projectValidate from "../../validations/project.validation.js";
 
 const router = express.Router();
 
-// create project
+// route to create project
+router.route("/create").post(auth(), projectController.createProject);
+
+// route to upload csv file
 router
-  .route("/create")
-  .post(
-    auth(),
-    projectController.createProject
-  );
-  
-  router
   .route("/upload/:projectId")
-  .post(
-    auth(),
-    projectController.uploadFileController
-  );
+  .post(auth(), projectController.uploadFileController);
 
-  router
+// route to get csv file
+router
   .route("/get-excel/:projectId")
-  .get(
-    auth(),
-    projectController.getExcelController
-  );
+  .get(auth(), projectController.getExcelController);
 
-  router
+// route to update project
+router
   .route("/update")
   .patch(
     auth(),
@@ -36,10 +28,10 @@ router
     projectController.updateProject
   );
 
-// get all projects in DB
+// route to get all projects in DB
 router.route("/get-all").get(auth(), projectController.findAllProjects);
 
-// get single project with id
+// route to get single project with id
 router
   .route("/get/:projectId")
   .get(
@@ -48,7 +40,7 @@ router
     projectController.findProjectById
   );
 
-// add single user to project with role
+// route to add single user to project with role
 router
   .route("/add-user")
   .post(
@@ -57,7 +49,7 @@ router
     projectController.addUserToProject
   );
 
-// remove single user from project with role
+// route to remove single user from project with role
 router
   .route("/remove-user")
   .delete(
@@ -65,7 +57,7 @@ router
     validate(projectValidate.removeUserFromProject),
     projectController.removeUserFromProject
   );
-// update single user role in project 
+// route to update single user role in project
 router
   .route("/update-user-role")
   .patch(
@@ -74,22 +66,22 @@ router
     projectController.updateUserRoleInProject
   );
 
-// get all users of project by role
-router
-  .route("/get-users-by-role")
-  .get(
-    auth(),
-    validate(projectValidate.getUsersOfProjectByRole),
-    projectController.getUsersOfProjectByRole
-  );
-
-// get all users of project
+// route to get all users of project
 router
   .route("/get-users/:projectId")
   .get(
     auth(),
     validate(projectValidate.getUsersOfProject),
     projectController.getUsersOfProject
+  );
+
+// route to get project user
+router
+  .route("/get-user/:projectId")
+  .get(
+    auth(),
+    validate(projectValidate.getProjectUser),
+    projectController.getProjectUser
   );
 
 export default router;

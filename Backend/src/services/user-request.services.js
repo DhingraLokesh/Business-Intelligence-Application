@@ -2,8 +2,9 @@ import { userRequestModel, userModel } from "../models/index.js";
 import ApiError from "../utils/api-error/index.js";
 import checkRole from "../utils/general/check-role.js";
 import { addUserToProject } from "./project.services.js";
+import { io } from "../app.js";
 
-// send request to join project
+// service to send request to join project
 const sendRequestToJoinProject = async (sender, projectId, role, receiver) => {
   const resp = await checkRole(projectId, sender, ["owner"]);
 
@@ -18,8 +19,9 @@ const sendRequestToJoinProject = async (sender, projectId, role, receiver) => {
   }
   const reqExists = await userRequestModel
     .find({ to: receiver, from: sender, project: projectId, role: role })
-    .sort({ $natural: -1 }).limit(1);
-  if(reqExists.length !== 0 && reqExists[0].state !== 'rejected'){
+    .sort({ $natural: -1 })
+    .limit(1);
+  if (reqExists.length !== 0 && reqExists[0].state !== "rejected") {
     throw new ApiError(400, "Request Already Exists");
   }
 
@@ -34,10 +36,14 @@ const sendRequestToJoinProject = async (sender, projectId, role, receiver) => {
     throw new ApiError(500, "Internal Sever Error");
   }
 
+  const request = await getRequestById(userRequest.id, true);
+  const roomName = `user-${receiver}`;
+  io.to(roomName).emit("requestFromServer", request);
+
   return userRequest;
 };
 
-// accept request to join project
+// service to accept request to join project
 const acceptRequestToJoinProject = async (requestId) => {
   const userRequest = await userRequestModel.findById(requestId);
 
@@ -67,7 +73,7 @@ const acceptRequestToJoinProject = async (requestId) => {
   return userRequest;
 };
 
-// reject request to join project
+// service to reject request to join project
 const rejectRequestToJoinProject = async (requestId) => {
   const userRequest = await userRequestModel.findById(requestId);
 
@@ -87,7 +93,7 @@ const rejectRequestToJoinProject = async (requestId) => {
   return userRequest;
 };
 
-// get all requests and divide it based on state like pending, accepted, rejected
+// service to get all requests and divide it based on state like pending, accepted, rejected
 const getAllRequests = async (userId) => {
   const sentRequests = await userRequestModel
     .find({
@@ -98,6 +104,10 @@ const getAllRequests = async (userId) => {
         path: "to",
         model: "User",
         select: "firstName lastName username email",
+      },
+      {
+        path: "project",
+        model: "Project",
       },
     ]);
 
@@ -111,6 +121,10 @@ const getAllRequests = async (userId) => {
         model: "User",
         select: "firstName lastName username email",
       },
+      {
+        path: "project",
+        model: "Project",
+      },
     ]);
 
   return {
@@ -119,9 +133,26 @@ const getAllRequests = async (userId) => {
   };
 };
 
+const getRequestById = async (requestId, isFrom = true) => {
+  const request = await userRequestModel.findById(requestId).populate([
+    {
+      path: isFrom ? "from" : "to",
+      model: "User",
+      select: "firstName lastName username email",
+    },
+    {
+      path: "project",
+      model: "Project",
+    },
+  ]);
+
+  return request;
+};
+
 export {
   sendRequestToJoinProject,
   acceptRequestToJoinProject,
   rejectRequestToJoinProject,
   getAllRequests,
+  getRequestById,
 };

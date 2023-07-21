@@ -11,10 +11,11 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createProject, uploadExcel } from "../../redux/slices/projectSlice";
-import Loader from "../Loader";
-import { hasNullOrUndefinedEmptyString } from "../../utils/chartUtils";
+import { createProject, uploadExcel } from "../../../redux/slices/projectSlice";
+import Loader from "../../Loader";
+import { hasNullOrUndefinedEmptyString } from "../../../utils/chartUtils";
 import Swal from "sweetalert2";
+import "./index.css"
 
 function ProjectCreate() {
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ function ProjectCreate() {
                           <label>Name</label>
                           <Form.Control
                             className="mt-1"
-                            defaultValue={projectData.name || ""}
+                            value={projectData.name || ""}
                             placeholder="Project Name"
                             name="name"
                             onChange={handleChange}
@@ -112,7 +113,7 @@ function ProjectCreate() {
                           <Form.Control
                             cols="80"
                             className="mt-1"
-                            defaultValue={projectData.description || ""}
+                            value={projectData.description || ""}
                             name="description"
                             onChange={handleChange}
                             placeholder="Project Description"
@@ -164,7 +165,7 @@ function ProjectCreate() {
 
                     <div className="mt-3 text-center">
                       <Button
-                        className="btn-fill pull-right"
+                        className="btn-fill pull-right dashboardButton"
                         type="submit"
                         variant="success"
                         disabled={

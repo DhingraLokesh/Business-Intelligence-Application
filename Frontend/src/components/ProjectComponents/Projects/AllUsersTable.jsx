@@ -5,13 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import {
   deleteProjectUser,
+  getProjectUser,
   updateProjectUserRole,
-} from "../../redux/slices/projectSlice";
+} from "../../../redux/slices/projectSlice";
 import Swal from "sweetalert2";
 
 function UserTable() {
   const dispatch = useDispatch();
-  const { allProjectUsers } = useSelector((state) => state.project);
+  const { allProjectUsers, projectUser } = useSelector(
+    (state) => state.project
+  );
 
   const [selectedUser, setSelectedUser] = useState({
     userId: null,
@@ -49,9 +52,7 @@ function UserTable() {
           })
         );
         Swal.fire("Updated!", "", "success");
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        dispatch(getProjectUser(user.project));
       }
     });
   };
@@ -71,9 +72,7 @@ function UserTable() {
           })
         );
         Swal.fire("Deleted!", "", "success");
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        dispatch(getProjectUser(user.project));
       }
     });
   };
@@ -93,7 +92,7 @@ function UserTable() {
           <th>Username</th>
           <th>Email</th>
           <th>Role</th>
-          <th>Action</th>
+          {projectUser?.data?.role === "owner" && <th>Action</th>}
         </tr>
       </thead>
       <tbody>
@@ -107,7 +106,7 @@ function UserTable() {
             <td width="15%">
               {user.role === "owner" ? (
                 "owner"
-              ) : (
+              ) : projectUser?.data?.role === "owner" ? (
                 <Select
                   defaultValue={options.filter(
                     (option) => option.value === user.role
@@ -120,33 +119,37 @@ function UserTable() {
                     });
                   }}
                 />
-              )}
-            </td>
-            <td className="d-flex justify-content-around">
-              {user.role === "owner" ? (
-                "No Actions"
               ) : (
-                <>
-                  {selectedUser.userId === user.user.id &&
-                    selectedUser.role !== user.role && (
-                      <Button
-                        variant="info"
-                        size="sm"
-                        onClick={() => handleUpdate(user)}
-                      >
-                        Update
-                      </Button>
-                    )}
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(user)}
-                  >
-                    Delete
-                  </Button>
-                </>
+                user.role
               )}
             </td>
+            {projectUser?.data?.role === "owner" && (
+              <td className="d-flex justify-content-around">
+                {user.role === "owner" ? (
+                  "No Actions"
+                ) : (
+                  <>
+                    {selectedUser.userId === user.user.id &&
+                      selectedUser.role !== user.role && (
+                        <Button
+                          variant="info"
+                          size="sm"
+                          onClick={() => handleUpdate(user)}
+                        >
+                          Update
+                        </Button>
+                      )}
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDelete(user)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

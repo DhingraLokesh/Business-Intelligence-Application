@@ -1,9 +1,11 @@
-import { useState } from "react";
 import { Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-import { handleRequest } from "../../redux/slices/requestSlice";
+import { useDispatch } from "react-redux";
+import {
+  getAllRequests,
+  handleRequest,
+} from "../../../redux/slices/requestSlice";
 
 function UserTable(props) {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ function UserTable(props) {
         );
 
         if (resp.meta.requestStatus === "fulfilled") {
-          window.location.reload();
+          dispatch(getAllRequests());
         }
       }
     });
@@ -48,6 +50,7 @@ function UserTable(props) {
             <th>Last Name</th>
             <th>Username</th>
             <th>Email</th>
+            <th>Project Name</th>
             <th>Role</th>
             <th>Actions</th>
           </tr>
@@ -61,6 +64,7 @@ function UserTable(props) {
             <td>{props.isSent ? req.to.lastName : req.from.lastName}</td>
             <td>{props.isSent ? req.to.username : req.from.username}</td>
             <td>{props.isSent ? req.to.email : req.from.email}</td>
+            <td>{req.project.name}</td>
             <td>{req.role}</td>
             <td className="d-flex justify-content-around">
               {props.isSent ? (

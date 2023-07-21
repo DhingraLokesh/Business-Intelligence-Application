@@ -5,9 +5,9 @@ import path from "path";
 import fs from "fs";
 import xlsx from "xlsx";
 
-// create project
+// service to create project
 const createProject = async (userId, body) => {
-  const newProject = await projectModel.create(body);
+  const newProject = await projectModel.create({...body, owner: userId});
 
   if (!newProject) {
     throw new ApiError(500, "Internal Sever Error");
@@ -24,7 +24,7 @@ const createProject = async (userId, body) => {
   return newProject;
 };
 
-// update project
+// service to update project
 const updateProject = async (body) => {
   const { projectId } = body;
   const project = await projectModel.findByIdAndUpdate(projectId, body);
@@ -32,16 +32,17 @@ const updateProject = async (body) => {
   return project;
 };
 
-// get all projects in DB
+// service to get all projects in DB
 const findAllProjects = async () => {
   const projects = await projectModel.find();
   if (!projects) {
     throw new ApiError(404, "No Project Found");
   }
+
   return projects;
 };
 
-// get single project with id
+// service to get single project with id
 const findProjectById = async (projectId) => {
   const project = await projectModel.findById(projectId);
   if (!project) {
@@ -50,7 +51,7 @@ const findProjectById = async (projectId) => {
   return project;
 };
 
-// add single user to project with role
+// service to add single user to project with role
 const addUserToProject = async (projectId, newUserId, role) => {
   const projectUser = await projectUserModel.findOne({
     user: newUserId,
@@ -74,7 +75,7 @@ const addUserToProject = async (projectId, newUserId, role) => {
   return newProjectUser;
 };
 
-// remove single user to project with role
+// service to remove single user to project with role
 const removeUserFromProject = async (projectId, userId, newUserId) => {
   const resp = await checkRole(projectId, userId, ["owner"]);
 
@@ -97,7 +98,7 @@ const removeUserFromProject = async (projectId, userId, newUserId) => {
   return deletedProjectUser;
 };
 
-// remove single user to project with role
+// service to remove single user to project with role
 const updateUserRoleInProject = async (
   projectId,
   userId,
@@ -124,20 +125,7 @@ const updateUserRoleInProject = async (
   return projectUser;
 };
 
-// get users of project according to role
-const getUsersOfProjectByRole = async (projectId, role) => {
-  const ProjectUsers = await projectUserModel.find({
-    role,
-    project: projectId,
-  });
-  if (!ProjectUsers) {
-    throw new ApiError(404, "No users found");
-  }
-
-  return ProjectUsers;
-};
-
-// get all users of a single project
+// service to get all users of a single project
 const getUsersOfProject = async (projectId) => {
   const ProjectUsers = await projectUserModel
     .find({ project: projectId })
@@ -154,6 +142,19 @@ const getUsersOfProject = async (projectId) => {
   return ProjectUsers;
 };
 
+// service to get project user
+const getProjectUser = async (projectId, userId) => {
+  const projectUser = await projectUserModel.findOne({
+    project: projectId,
+    user: userId,
+  });
+
+  if (!projectUser) {
+    throw new ApiError(404, "No User Found");
+  }
+  return projectUser;
+};
+// service to get excel file corresponding to project
 const getExcel = async (projectId) => {
   const excelPath = path.join(
     path.dirname(new URL(import.meta.url).pathname),
@@ -179,33 +180,6 @@ const getExcel = async (projectId) => {
   const jsonData = xlsx.utils.sheet_to_json(worksheet);
   console.log("Excel file converted to JSON.");
   return jsonData;
-
-  /*
-  const supportedExtensions = [".csv", ".xls", ".xlsx"];
-  const excelFile = supportedExtensions.find((extension) =>
-    fs.existsSync(`${excelPath}${extension}`)
-  );
-
-  if (!excelFile) {
-    throw new ApiError(404, "Excel not found");
-  }
-
-  const contentType =
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-  return new Promise((resolve, reject) => {
-    fs.readFile(`${excelPath}${excelFile}`, (err, data) => {
-      if (err) {
-        reject(new ApiError(500, "Failed to read Excel"));
-      } else {
-        resolve({
-          contentType,
-          data:
-            `data:${contentType};base64,` +
-            Buffer.from(data).toString("base64"),
-        });
-      }
-    });
-  });*/
 };
 
 export {
@@ -215,8 +189,8 @@ export {
   findProjectById,
   addUserToProject,
   getUsersOfProject,
-  getUsersOfProjectByRole,
   removeUserFromProject,
   updateUserRoleInProject,
   getExcel,
+  getProjectUser,
 };

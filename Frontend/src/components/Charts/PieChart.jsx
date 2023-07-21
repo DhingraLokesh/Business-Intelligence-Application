@@ -18,6 +18,10 @@ const PieChart = (props) => {
           },
         },
       ],
+      title : {
+        text: props.title,
+        align : "left"
+      }
     },
   };
 
@@ -26,6 +30,7 @@ const PieChart = (props) => {
       <ReactApexChart
         options={chartData.options}
         series={chartData.series}
+        title={chartData.title}
         type="donut"
         width={600}
         height={320}

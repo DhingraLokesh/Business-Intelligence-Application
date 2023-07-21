@@ -42,6 +42,14 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem("token");
+      state.token = null;
+      state.user.data = {};
+      state.loggedIn = false;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
@@ -60,6 +68,7 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.register.loading = false;
+        state.register.loadingMessage = null;
         state.register.errorMessage = action?.payload?.message;
       })
       .addCase(login.pending, (state) => {
@@ -78,22 +87,8 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.login.loading = false;
+        state.register.loadingMessage = null;
         state.login.errorMessage = action?.payload?.message;
-      })
-      .addCase(logout.pending, (state) => {
-        state.logout.loading = true;
-        state.logout.loadingMessage = "Logging out ...";
-        state.logout.errorMessage = null;
-      })
-      .addCase(logout.fulfilled, (state, action) => {
-        state.logout.loading = false;
-        state.loggedIn = false;
-        state.logout.loadingMessage = null;
-        state.logout.errorMessage = null;
-      })
-      .addCase(logout.rejected, (state, action) => {
-        state.logout.loading = false;
-        state.logout.errorMessage = action?.payload?.message;
       })
       .addCase(getUser.pending, (state) => {
         state.user.loading = true;
@@ -183,18 +178,6 @@ export const register = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk(
-  "auth/logout",
-  async (payload, { rejectWithValue }) => {
-    try {
-      await localStorage.removeItem("token");
-      return null;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
-
 export const login = createAsyncThunk(
   "auth/login",
   async (payload, { rejectWithValue }) => {
@@ -267,4 +250,5 @@ export const getImage = createAsyncThunk(
   }
 );
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,31 +1,52 @@
 import React, { useEffect, useState } from "react";
 
 // react-bootstrap components
-import {
-  Button,
-  Card,
-  Form,
-  Container,
-  Row,
-  Col,
-  Tab,
-  Tabs,
-} from "react-bootstrap";
-import Loader from "../Loader";
+import { Card, Container, Row, Col, Tab, Tabs } from "react-bootstrap";
+import Loader from "../../Loader";
 import { useDispatch, useSelector } from "react-redux";
 import RequestTable from "./RequestTable";
-import { getAllRequests } from "../../redux/slices/requestSlice";
+import {
+  getAllRequests,
+  receiveSocketRequest,
+} from "../../../redux/slices/requestSlice";
+import { getUser } from "../../../redux/slices/authSlice";
+import socket from "../../../utils/socket";
 
 function Requests() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllRequests());
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
+  const { user } = useSelector((state) => state.auth);
   const { allRequests } = useSelector((state) => state.request);
 
   const [key, setKey] = useState(true);
+
+  const handleRequestFromServer = (request) => {
+    setKey(false);
+    dispatch(receiveSocketRequest(request));
+  };
+
+  useEffect(() => {
+    if (!user?.data?.id) {
+      dispatch(getUser());
+    }
+
+    socket.connect();
+    socket.emit("joinRequestRoom", user?.data?.id);
+
+    dispatch(getAllRequests());
+
+    socket.on("requestFromServer", handleRequestFromServer);
+
+    return () => {
+      socket.off("requestFromServer", handleRequestFromServer);
+    };
+  }, [dispatch, user]);
 
   return (
     <>
@@ -46,6 +67,7 @@ function Requests() {
                     id="noanim-tab-example"
                     className="mb-3"
                     onSelect={(k) => setKey(k === "Sent")}
+                    activeKey={key ? "Sent" : "Received"}
                   >
                     <Tab eventKey="Sent" title="Sent" />
                     <Tab eventKey="Received" title="Received" />

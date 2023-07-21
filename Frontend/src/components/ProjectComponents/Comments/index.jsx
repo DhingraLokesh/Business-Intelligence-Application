@@ -3,10 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import "../../assets/css/styles.css";
-import { addComment, getAllComments } from "../../redux/slices/commentSlice";
-import { getProjectUser } from "../../redux/slices/projectSlice";
-import Loader from "../Loader";
+import "../../../assets/css/styles.css";
+import {
+  addComment,
+  addCommentSocket,
+  getAllComments,
+} from "../../../redux/slices/commentSlice";
+import { getProjectUser } from "../../../redux/slices/projectSlice";
+import Loader from "../../Loader";
+import socket from "../../../utils/socket";
 
 const Comments = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -18,10 +23,33 @@ const Comments = ({ onClose }) => {
   const { projectUser } = useSelector((state) => state.project);
 
   useEffect(() => {
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const handleCommentFromServer = (request) => {
+    console.log("request", request);
+    dispatch(addCommentSocket(request));
+  };
+
+  useEffect(() => {
     const projectId = location.pathname.split("/")[2];
+
+    socket.connect();
+    socket.emit("joinCommentRoom", projectId);
+
     dispatch(getAllComments(projectId));
     dispatch(getProjectUser(projectId));
 
+    socket.on("commentFromServer", handleCommentFromServer);
+
+    return () => {
+      socket.off("commentFromServer", handleCommentFromServer);
+    };
+  }, [dispatch, location.pathname]);
+
+  useEffect(() => {
     const handleOutsideClick = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         onClose();
@@ -33,7 +61,7 @@ const Comments = ({ onClose }) => {
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
-  }, [dispatch, location.pathname, onClose]);
+  }, [onClose]);
 
   const handleInputChange = (event) => {
     setComment(event.target.value);
@@ -44,17 +72,12 @@ const Comments = ({ onClose }) => {
     if (comment.trim() !== "") {
       setComment("");
       const projectId = location.pathname.split("/")[2];
-
-      const resp = await dispatch(
+      await dispatch(
         addComment({
           projectId,
           message: comment.trim(),
         })
       );
-
-      if (resp.meta.requestStatus === "fulfilled") {
-        dispatch(getAllComments(projectId));
-      }
     }
   };
 
@@ -63,8 +86,6 @@ const Comments = ({ onClose }) => {
       handleSubmit(event);
     }
   };
-
-  console.log(projectUser);
 
   return (
     <div ref={sidebarRef} className="comment-sidebar right">
@@ -100,39 +121,53 @@ const Comments = ({ onClose }) => {
                   allComments?.loadingMessage || newComment?.loadingMessage
                 }
               />
+            ) : allComments?.data?.length === 0 ? (
+              <h3
+                className="comment-sidebar-title"
+                style={{
+                  textAlign: "center",
+                  marginTop: "50%",
+                }}
+              >
+                No comments to display !!
+              </h3>
             ) : (
               allComments?.data?.map((comment, index) => (
                 <li className="list-group-item my-1" key={index}>
                   <div className="d-flex justify-content-between">
                     <strong
+                      style={{
+                        overflowWrap: "break-word",
+                        width: "50%",
+                      }}
+                    >
+                      {comment.user.username}
+                    </strong>
+                    <div
+                      className="comment-time"
+                      style={{
+                        fontSize: "0.7rem",
+                      }}
+                    >
+                      {new Date(comment.createdAt).toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                        daySuffix: "long",
+                      })}
+                    </div>
+                  </div>
+                  <div
+                    className="mt-2"
                     style={{
                       overflowWrap: "break-word",
-                      width: "50%",
-                    }}
-                    >{comment.user.username}</strong>
-                    <div
-                    className="comment-time"
-                    style={{
-                      fontSize: "0.7rem",
                     }}
                   >
-                    {new Date(comment.createdAt).toLocaleString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                      daySuffix: "long",
-                    })}
+                    {comment.message}
                   </div>
-                  </div>
-                  <div className="mt-2"
-                  style={{
-                    overflowWrap: "break-word",
-
-                  }}
-                  >{comment.message}</div>
                 </li>
               ))
             )}
