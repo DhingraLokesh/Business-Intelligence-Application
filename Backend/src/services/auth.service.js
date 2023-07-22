@@ -3,6 +3,7 @@ import * as userService from "./user.service.js";
 import * as tokenService from "./token.service.js";
 import bcrypt from "bcrypt";
 
+// service to handle register request
 const register = async (registerBody) => {
   registerBody.password = await bcrypt.hash(registerBody.password, 10);
 
@@ -27,6 +28,7 @@ const register = async (registerBody) => {
   };
 };
 
+// service to handle login request
 const login = async (loginBody) => {
   const user = await userService.getUserByEmail(loginBody.email, true);
 

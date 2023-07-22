@@ -1,7 +1,7 @@
 import catchAsync from "../utils/general/catch-async.js";
 import * as commentServices from "../services/comment.service.js";
 
-// add comment to a project
+// controller to add comment to a project
 const addCommentsOfProject = catchAsync(async (req, res) => {
   const comment = await commentServices.addCommentsOfProject(
     req.body.projectId,
@@ -11,7 +11,7 @@ const addCommentsOfProject = catchAsync(async (req, res) => {
   res.send(comment);
 });
 
-// get comments of a project
+// controller to get comments of a project
 const getCommentsOfProject = catchAsync(async (req, res) => {
   const comments = await commentServices.getCommentsOfProject(
     req.params.projectId

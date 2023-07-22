@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { objectId } from "./custom.validation.js";
 
+// validation for req.body for sending request to join project
 const sendRequestToJoinProject = {
   body: Joi.object().keys({
     projectId: Joi.string().custom(objectId).required(),
@@ -9,6 +10,7 @@ const sendRequestToJoinProject = {
   }),
 };
 
+// validation for req.body for handling request to join project
 const handleRequestToJoinProject = {
   body: Joi.object().keys({
     requestId: Joi.string().custom(objectId).required(),

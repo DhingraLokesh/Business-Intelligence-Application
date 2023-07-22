@@ -1,7 +1,7 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import ProjectDashboard from "./components/ProjectComponents/Projects/ProjectDashboard";
+import ProjectDashboard from "./components/Charts/ProjectDashboard";
 import UserProfile from "./components/UserProfile";
 import Projects from "./components/ProjectComponents/Projects";
 import ProjectUpdate from "./components/ProjectComponents/Projects/ProjectUpdate";

@@ -8,7 +8,7 @@ import {
   getProjectUser,
   updateProjectUserRole,
 } from "../../../redux/slices/projectSlice";
-import Swal from "sweetalert2";
+import { confirmAlert, normalAlert } from "../../../utils/Swal";
 
 function UserTable() {
   const dispatch = useDispatch();
@@ -37,12 +37,13 @@ function UserTable() {
   ];
 
   const handleUpdate = (user) => {
-    Swal.fire({
-      icon: "question",
-      title: `Do you want to update the role of ${user.user.username}?`,
-      showCancelButton: true,
-      confirmButtonText: "Update",
-    }).then((result) => {
+    confirmAlert(
+      `Do you want to update the role of ${user.user.username}?`,
+      "",
+      "question",
+      true,
+      "Update"
+    ).then((result) => {
       if (result.isConfirmed) {
         dispatch(
           updateProjectUserRole({
@@ -51,19 +52,20 @@ function UserTable() {
             role: selectedUser.role,
           })
         );
-        Swal.fire("Updated!", "", "success");
+        normalAlert("Role Updated!", "", "success");
         dispatch(getProjectUser(user.project));
       }
     });
   };
 
   const handleDelete = (user) => {
-    Swal.fire({
-      icon: "question",
-      title: `Do you want to delete the ${user.user.username} from project?`,
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-    }).then((result) => {
+    confirmAlert(
+      `Do you want to delete the ${user.user.username} from project?`,
+      "",
+      "question",
+      true,
+      "Delete"
+    ).then((result) => {
       if (result.isConfirmed) {
         dispatch(
           deleteProjectUser({
@@ -71,7 +73,7 @@ function UserTable() {
             userId: user.user.id,
           })
         );
-        Swal.fire("Deleted!", "", "success");
+        normalAlert("Deleted!", "", "success");
         dispatch(getProjectUser(user.project));
       }
     });

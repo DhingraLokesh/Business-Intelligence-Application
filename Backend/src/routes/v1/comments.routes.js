@@ -6,7 +6,7 @@ import * as commentValidate from "../../validations/comment.validations.js";
 
 const router = express.Router();
 
-// add comment to a project
+// route to add comment to a project
 router
   .route("/add")
   .post(
@@ -15,7 +15,7 @@ router
     commentController.addCommentsOfProject
   );
 
-// get comments of a project
+// route to get comments of a project
 router
   .route("/get/:projectId")
   .get(

@@ -1,4 +1,4 @@
-
+// convert model data to json obj
 const toJSON = (schema) => {
     let transform;
     if (schema.options.toJSON && schema.options.toJSON.transform) {

@@ -7,7 +7,7 @@ import commentRoutes from "./comments.routes.js";
 import userRequestRoutes from "./user-request.routes.js";
 
 const router = express.Router();
-
+// all main routes
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/requests", userRequestRoutes);

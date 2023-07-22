@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import config from "../configuration/config-variables/index.js";
 import ApiError from "../utils/api-error/index.js"
 
+// middleware to controll error
 const errorConverter = (err, req, res, next) => {
   let error = err;
   if (!(error instanceof ApiError)) {
@@ -12,6 +13,7 @@ const errorConverter = (err, req, res, next) => {
   next(error);
 };
 
+// middleware to handle error
 const errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
   if (config.env === "production" && !err.isOperational) {
