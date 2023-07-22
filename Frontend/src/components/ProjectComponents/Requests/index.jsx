@@ -50,43 +50,60 @@ function Requests() {
 
   return (
     <>
-      {allRequests.loading ? (
-        <Loader message={allRequests.loadingMessage} />
-      ) : (
-        <Container fluid>
-          <Row>
-            <Col md="12">
-              <Card className="card-user mt-4">
-                <Card.Header>
-                  <Card.Title as="h4">All Requests</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                  <Tabs
-                    defaultActiveKey="Sent"
-                    transition={false}
-                    id="noanim-tab-example"
-                    className="mb-3"
-                    onSelect={(k) => setKey(k === "Sent")}
-                    activeKey={key ? "Sent" : "Received"}
-                  >
-                    <Tab eventKey="Sent" title="Sent" />
-                    <Tab eventKey="Received" title="Received" />
-                  </Tabs>
+      <Container fluid>
+        <Row>
+          <Col md="12">
+            <Card className="card-user mt-4">
+              <Card.Header>
+                <Card.Title as="h4">All Requests</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                {allRequests.loading ? (
+                  <Container fluid>
+                    <Row>
+                      <Col md="12">
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            minHeight: "400px",
+                          }}
+                        >
+                          <Loader message={allRequests.loadingMessage} />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Container>
+                ) : (
+                  <>
+                    <Tabs
+                      defaultActiveKey="Sent"
+                      transition={false}
+                      id="noanim-tab-example"
+                      className="mb-3"
+                      onSelect={(k) => setKey(k === "Sent")}
+                      activeKey={key ? "Sent" : "Received"}
+                    >
+                      <Tab eventKey="Sent" title="Sent" />
+                      <Tab eventKey="Received" title="Received" />
+                    </Tabs>
 
-                  <RequestTable
-                    data={
-                      key
-                        ? allRequests.sentRequests
-                        : allRequests.receivedRequests
-                    }
-                    isSent={key}
-                  />
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      )}
+                    <RequestTable
+                      data={
+                        key
+                          ? allRequests.sentRequests
+                          : allRequests.receivedRequests
+                      }
+                      isSent={key}
+                    />
+                  </>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 }
