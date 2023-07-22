@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import {
   deleteProjectUser,
-  getProjectUser,
+  getAllUsersOfProject,
   updateProjectUserRole,
 } from "../../../redux/slices/projectSlice";
 import { confirmAlert, normalAlert } from "../../../utils/Swal";
 
-function UserTable() {
+function UserTable({ setToReload }) {
   const dispatch = useDispatch();
   const { allProjectUsers, projectUser } = useSelector(
     (state) => state.project
@@ -43,17 +43,26 @@ function UserTable() {
       "question",
       true,
       "Update"
-    ).then((result) => {
+    ).then(async (result) => {
       if (result.isConfirmed) {
-        dispatch(
+        const resp = await dispatch(
           updateProjectUserRole({
             projectId: user.project,
             userId: user.user.id,
             role: selectedUser.role,
           })
         );
-        normalAlert("Role Updated!", "", "success");
-        dispatch(getProjectUser(user.project));
+
+        if (resp.meta.requestStatus === "fulfilled") {
+          setToReload(false);
+          setSelectedUser({
+            userId: null,
+            role: null,
+          });
+
+          normalAlert("Role Updated!", "", "success");
+          dispatch(getAllUsersOfProject(user.project));
+        }
       }
     });
   };
@@ -65,16 +74,20 @@ function UserTable() {
       "question",
       true,
       "Delete"
-    ).then((result) => {
+    ).then(async (result) => {
       if (result.isConfirmed) {
-        dispatch(
+        const resp = await dispatch(
           deleteProjectUser({
             projectId: user.project,
             userId: user.user.id,
           })
         );
-        normalAlert("Deleted!", "", "success");
-        dispatch(getProjectUser(user.project));
+
+        if (resp.meta.requestStatus === "fulfilled") {
+          setToReload(false);
+          normalAlert("Deleted!", "", "success");
+          dispatch(getAllUsersOfProject(user.project));
+        }
       }
     });
   };
@@ -110,8 +123,12 @@ function UserTable() {
                 "owner"
               ) : projectUser?.data?.role === "owner" ? (
                 <Select
-                  defaultValue={options.filter(
-                    (option) => option.value === user.role
+                  value={options.filter(
+                    (option) =>
+                      option.value ===
+                      (selectedUser.userId === user.user.id
+                        ? selectedUser.role
+                        : user.role)
                   )}
                   options={options}
                   onChange={(e) => {
