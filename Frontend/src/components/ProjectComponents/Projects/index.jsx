@@ -55,10 +55,10 @@ function Projects() {
                     <Card
                       className="card1"
                       style={ isMyProjects ? {
-                        height: "13rem",
+                        height: "90%",
                         width: "15rem",
                       } : {
-                        height: "16rem",
+                        height: "90%",
                         width: "15rem",
                       }}
                     >
@@ -85,8 +85,8 @@ function Projects() {
                             fontSize: "15px",
                           }}
                         >
-                          {projUser.project.description.slice(0, 30)}
-                          {projUser.project.description.length > 30
+                          {projUser.project.description.slice(0, 20)}
+                          {projUser.project.description.length > 20
                             ? "..."
                             : ""}
                         </p>
@@ -96,6 +96,7 @@ function Projects() {
                       </Card.Body>
                       <Card.Footer
                         style={{
+                          marginTop: "auto",
                           backgroundColor: "transparent",
                           border: "none",
                         }}
@@ -113,7 +114,7 @@ function Projects() {
                             View
                           </Button>
                           <Button
-                            className="but mx-1"
+                            className="but mx-2"
                             size="sm"
                             onClick={() => {
                               navigate(`/project/${projUser.project.id}/edit`);
