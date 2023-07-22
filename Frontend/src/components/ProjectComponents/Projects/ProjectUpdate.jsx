@@ -92,6 +92,18 @@ function ProjectUpdate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(currentProject?.data?.name === data?.name && 
+      currentProject?.data?.description === data?.description){
+        return;
+      }
+      if (data?.description?.length < 3 || data?.descrpition?.length > 100) {
+        normalAlert(
+          "Error!",
+          `description length should be between 3 and 100 characters. Current length is ${data?.description?.length}`,
+          "error"
+        );
+        return;
+      }  
     const resp = await dispatch(updateProject(data));
 
     if (resp.meta.requestStatus === "fulfilled") {

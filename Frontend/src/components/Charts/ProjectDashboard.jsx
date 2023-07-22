@@ -233,7 +233,7 @@ const ProjectDashboard = () => {
         {toShow && (
           <h3
             style={{
-              marginLeft: "10%",
+              marginLeft: "5%",
               marginTop: "1%",
             }}
           >
@@ -410,7 +410,7 @@ const ProjectDashboard = () => {
         </div>
         <div
           style={{
-            marginLeft: "10%",
+            marginLeft: "5%",
           }}
         >
           {selectedChart === "pie"
