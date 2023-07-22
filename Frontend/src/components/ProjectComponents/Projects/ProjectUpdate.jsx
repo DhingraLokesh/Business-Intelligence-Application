@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../../redux/slices/authSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import UserTable from "./AllUsersTable";
@@ -28,7 +28,6 @@ const animatedComponents = makeAnimated();
 
 function ProjectUpdate() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -51,6 +50,8 @@ function ProjectUpdate() {
     description: "",
   });
 
+  const [toReload, setToReload] = useState(true);
+
   const { allUsers } = useSelector((state) => state.auth);
   const { currentProject, allProjectUsers, projectUser, editProject } =
     useSelector((state) => state.project);
@@ -70,7 +71,10 @@ function ProjectUpdate() {
             (projUser) => projUser.user.id == user.id
           );
           const isUserInSentRequests = allRequests?.sentRequests?.some(
-            (reqUser) => (reqUser.to.id == user.id && reqUser.state == "pending" && reqUser.project.id == currentProject?.data?.id)
+            (reqUser) =>
+              reqUser.to.id == user.id &&
+              reqUser.state == "pending" &&
+              reqUser.project.id == currentProject?.data?.id
           );
           return !isUserInProject && !isUserInSentRequests;
         })
@@ -96,6 +100,7 @@ function ProjectUpdate() {
 
     if (resp.meta.requestStatus === "fulfilled") {
       normalAlert("Project Details Updated !", "", "success");
+      setToReload(false);
       dispatch(getProjectById(data.projectId));
     }
   };
@@ -119,7 +124,7 @@ function ProjectUpdate() {
 
   return (
     <>
-      {allProjectUsers.loading || currentProject.loading ? (
+      {(allProjectUsers.loading || currentProject.loading) && toReload ? (
         <Loader
           message={
             allProjectUsers.loadingMessage || currentProject.loadingMessage
@@ -274,7 +279,7 @@ function ProjectUpdate() {
                   <Card.Title as="h4">All Users</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <UserTable />
+                  <UserTable setToReload={setToReload} />
                 </Card.Body>
               </Card>
             </Col>

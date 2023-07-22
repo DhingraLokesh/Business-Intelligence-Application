@@ -20,6 +20,7 @@ function User() {
   const [file, setFile] = useState(null);
   const [finalFile, setFinalFile] = useState(null);
   const [isImage, setIsImage] = useState(false);
+  const [toReload, setToReload] = useState(true);
 
   const [data, setData] = useState({
     firstName: "",
@@ -42,7 +43,7 @@ function User() {
   useEffect(() => {
     dispatch(getUser());
     dispatch(getImage());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setData({
@@ -89,6 +90,7 @@ function User() {
     const resp = await dispatch(updateUser(data));
 
     if (resp.meta.requestStatus === "fulfilled") {
+      setToReload(false)
       normalAlert("User updated !", "", "success");
       dispatch(getUser());
     }
@@ -111,7 +113,7 @@ function User() {
 
   return (
     <>
-      {user.loading ? (
+      {user.loading && toReload ? (
         <Loader message={user.loadingMessage} />
       ) : (
         <Container fluid>
