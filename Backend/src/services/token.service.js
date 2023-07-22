@@ -3,6 +3,7 @@ import config from "../configuration/config-variables/index.js";
 import ApiError from "../utils/api-error/index.js";
 import { tokenModel } from "../models/index.js";
 
+// util function to generate token
 const generateToken = (userId, expires, secret = config.jwt.secret) => {
   const payload = {
     userId,
@@ -13,6 +14,7 @@ const generateToken = (userId, expires, secret = config.jwt.secret) => {
   return jwt.sign(payload, secret);
 };
 
+// util function to save token
 const saveToken = async (token, userId, expires, type, blacklisted = false) => {
   const tokenDetails = {
     token,
@@ -30,6 +32,7 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
   return tokenDoc;
 };
 
+// util function to verify token
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
   const filterBody = { token, type, user: payload.userId, blacklisted: false };
@@ -43,6 +46,7 @@ const verifyToken = async (token, type) => {
   return tokenDoc;
 };
 
+// service to generate auth token
 const generateAuthTokens = async (user) => {
   const currentDate = new Date();
   const accessTokenExpires = new Date(

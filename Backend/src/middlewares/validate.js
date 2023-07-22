@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import pick from '../utils/general/pick.js';
 import ApiError from '../utils/api-error/index.js';
 
+// middleware to validate object recieved through req obj
 const validate = (schema) => (req, res, next) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
   const object = pick(req, Object.keys(validSchema));

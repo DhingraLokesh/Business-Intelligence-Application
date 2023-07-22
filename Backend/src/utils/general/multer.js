@@ -1,6 +1,8 @@
 import multer from "multer";
 import path from "path";
 
+// this file contains all the util functions to handle file upload and serve it statically
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(
