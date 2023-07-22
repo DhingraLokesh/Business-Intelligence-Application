@@ -54,8 +54,11 @@ function Projects() {
                   <Col className="col-3 mt-3">
                     <Card
                       className="card1"
-                      style={{
-                        height: "17rem",
+                      style={ isMyProjects ? {
+                        height: "13rem",
+                        width: "15rem",
+                      } : {
+                        height: "16rem",
                         width: "15rem",
                       }}
                     >

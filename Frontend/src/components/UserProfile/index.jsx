@@ -77,7 +77,18 @@ function User() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if(data?.username === user?.data?.username &&
+      data?.email === user?.data?.email &&
+      data?.firstName === user?.data?.firstName &&
+      data?.lastName === user?.data?.lastName &&
+      data?.address === user?.data?.address &&
+      data?.city === user?.data?.city &&
+      data?.country === user?.data?.country &&
+      data?.pinCode === user?.data?.pinCode &&
+      data?.about === user?.data?.about 
+      ){
+        return
+      }
     if (data?.username?.length < 3 || data?.username?.length > 15) {
       normalAlert(
         "Error!",
