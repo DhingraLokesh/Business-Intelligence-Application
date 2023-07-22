@@ -9,6 +9,16 @@ const initialState = {
     loadingMessage: null,
     errorMessage: null,
   },
+  editUser: {
+    loading: false,
+    loadingMessage: null,
+    errorMessage: null,
+  },
+  editImage: {
+    loading: false,
+    loadingMessage: null,
+    errorMessage: null,
+  },
   userImage: {
     data: null,
     loading: false,
@@ -121,32 +131,32 @@ const authSlice = createSlice({
         state.allUsers.errorMessage = action?.payload?.message;
       })
       .addCase(updateUser.pending, (state) => {
-        state.user.loading = true;
-        state.user.loadingMessage = "Updating user ...";
-        state.user.errorMessage = null;
+        state.editUser.loading = true;
+        state.editUser.loadingMessage = "Updating user ...";
+        state.editUser.errorMessage = null;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.user.loading = false;
-        state.user.loadingMessage = null;
-        state.user.errorMessage = null;
+        state.editUser.loading = false;
+        state.editUser.loadingMessage = null;
+        state.editUser.errorMessage = null;
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.user.loading = false;
-        state.user.errorMessage = action?.payload?.message;
+        state.editUser.loading = false;
+        state.editUser.errorMessage = action?.payload?.message;
       })
       .addCase(uploadImage.pending, (state) => {
-        state.user.loading = true;
-        state.user.loadingMessage = "Uploading user image ...";
-        state.user.errorMessage = null;
+        state.editImage.loading = true;
+        state.editImage.loadingMessage = "Uploading user image ...";
+        state.editImage.errorMessage = null;
       })
       .addCase(uploadImage.fulfilled, (state, action) => {
-        state.user.loading = false;
-        state.user.loadingMessage = null;
-        state.user.errorMessage = null;
+        state.editImage.loading = false;
+        state.editImage.loadingMessage = null;
+        state.editImage.errorMessage = null;
       })
       .addCase(uploadImage.rejected, (state, action) => {
-        state.user.loading = false;
-        state.user.errorMessage = action?.payload?.message;
+        state.editImage.loading = false;
+        state.editImage.errorMessage = action?.payload?.message;
       })
       .addCase(getImage.pending, (state) => {
         state.userImage.loading = true;

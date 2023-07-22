@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../redux/slices/authSlice";
-import { Spinner } from "react-bootstrap";
+import ButtonLoader from "../Loader/ButtonLoader";
 
 const Signup = () => {
   const [data, setData] = useState({
@@ -13,9 +13,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const { errorMessage, loading } = useSelector(
-    (state) => state.auth.register
-  );
+  const { errorMessage, loading } = useSelector((state) => state.auth.register);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -96,19 +94,7 @@ const Signup = () => {
             )}
             <button type="submit" className={styles.green_btn}>
               Sign Up
-              {loading && (
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                  style={{
-                    marginLeft: "20px",
-                    paddingTop: "5px",
-                  }}
-                />
-              )}
+              {loading && <ButtonLoader />}
             </button>
           </form>
         </div>

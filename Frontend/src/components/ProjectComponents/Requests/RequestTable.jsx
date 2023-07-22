@@ -1,25 +1,26 @@
 import { Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
-import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import {
   getAllRequests,
   handleRequest,
 } from "../../../redux/slices/requestSlice";
+import { confirmAlert, normalAlert } from "../../../utils/Swal";
 
 function UserTable(props) {
   const dispatch = useDispatch();
   const handleRequestChange = (req, isAccept) => {
-    Swal.fire({
-      icon: "question",
-      title: `Do you want to ${
+    confirmAlert(
+      `Do you want to ${
         isAccept ? "accept" : "reject"
       } the project joining request?`,
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-    }).then(async (result) => {
+      "",
+      "question",
+      true,
+      "Yes"
+    ).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire(isAccept ? "Accepted !" : "Rejected !", "", "success");
+        normalAlert(isAccept ? "Accepted !" : "Rejected !", "", "success");
 
         const resp = await dispatch(
           handleRequest({

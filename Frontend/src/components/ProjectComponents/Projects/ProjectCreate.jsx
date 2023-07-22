@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { createProject, uploadExcel } from "../../../redux/slices/projectSlice";
 import Loader from "../../Loader";
 import { hasNullOrUndefinedEmptyString } from "../../../utils/chartUtils";
-import Swal from "sweetalert2";
-import "./index.css"
+import "./index.css";
+import { normalAlert } from "../../../utils/Swal";
 
 function ProjectCreate() {
   const dispatch = useDispatch();
@@ -41,11 +41,12 @@ function ProjectCreate() {
         const { rows } = resp;
 
         if (hasNullOrUndefinedEmptyString(rows)) {
-          Swal.fire(
+          normalAlert(
             "Upload another file !!",
             "Uploaded file contains null, undefined, or empty string fields.",
             "error"
           );
+
           return;
         }
 

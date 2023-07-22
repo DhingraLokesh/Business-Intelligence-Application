@@ -20,6 +20,11 @@ const initialState = {
     loadingMessage: null,
     errorMessage: null,
   },
+  editProject: {
+    loading: false,
+    loadingMessage: null,
+    errorMessage: null,
+  },
   excel: {
     data: [],
     loading: false,
@@ -74,18 +79,18 @@ const projectSlice = createSlice({
         state.allUserProjects.errorMessage = action?.payload?.message;
       })
       .addCase(updateProject.pending, (state) => {
-        state.currentProject.loading = true;
-        state.currentProject.loadingMessage = "Updating project ...";
-        state.currentProject.errorMessage = null;
+        state.editProject.loading = true;
+        state.editProject.loadingMessage = "Updating project ...";
+        state.editProject.errorMessage = null;
       })
       .addCase(updateProject.fulfilled, (state, action) => {
-        state.currentProject.loading = false;
-        state.currentProject.loadingMessage = null;
-        state.currentProject.errorMessage = null;
+        state.editProject.loading = false;
+        state.editProject.loadingMessage = null;
+        state.editProject.errorMessage = null;
       })
       .addCase(updateProject.rejected, (state, action) => {
-        state.currentProject.loading = false;
-        state.currentProject.errorMessage = action?.payload?.message;
+        state.editProject.loading = false;
+        state.editProject.errorMessage = action?.payload?.message;
       })
       .addCase(getAllUsersOfProject.pending, (state) => {
         state.allProjectUsers.loading = true;

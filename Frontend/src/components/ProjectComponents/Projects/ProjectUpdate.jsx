@@ -21,6 +21,8 @@ import {
 import Loader from "../../Loader";
 import socket from "../../../utils/socket";
 import "./index.css";
+import ButtonLoader from "../../Loader/ButtonLoader";
+import { normalAlert } from "../../../utils/Swal";
 
 const animatedComponents = makeAnimated();
 
@@ -50,9 +52,8 @@ function ProjectUpdate() {
   });
 
   const { allUsers } = useSelector((state) => state.auth);
-  const { currentProject, allProjectUsers, projectUser } = useSelector(
-    (state) => state.project
-  );
+  const { currentProject, allProjectUsers, projectUser, editProject } =
+    useSelector((state) => state.project);
   const { allRequests, sendRequestSlice } = useSelector(
     (state) => state.request
   );
@@ -69,7 +70,7 @@ function ProjectUpdate() {
             (projUser) => projUser.user.id == user.id
           );
           const isUserInSentRequests = allRequests?.sentRequests?.some(
-            (reqUser) => reqUser.to.id == user.id && reqUser.state == "pending"
+            (reqUser) => (reqUser.to.id == user.id && reqUser.state == "pending" && reqUser.project.id == currentProject?.data?.id)
           );
           return !isUserInProject && !isUserInSentRequests;
         })
@@ -94,6 +95,7 @@ function ProjectUpdate() {
     const resp = await dispatch(updateProject(data));
 
     if (resp.meta.requestStatus === "fulfilled") {
+      normalAlert("Project Details Updated !", "", "success");
       dispatch(getProjectById(data.projectId));
     }
   };
@@ -103,26 +105,24 @@ function ProjectUpdate() {
     const resp = await dispatch(
       sendRequest({
         projectId: currentProject?.data?.id,
-        receiver: addUser,
+        receiver: addUser?.value,
         role: selectedRole,
       })
     );
 
     if (resp.meta.requestStatus === "fulfilled") {
+      normalAlert("Request Sent !", "", "success");
+      setAddUser(null);
       dispatch(getAllRequests());
     }
   };
 
   return (
     <>
-      {allProjectUsers.loading ||
-      currentProject.loading ||
-      sendRequestSlice.loading ? (
+      {allProjectUsers.loading || currentProject.loading ? (
         <Loader
           message={
-            allProjectUsers.loadingMessage ||
-            currentProject.loadingMessage ||
-            sendRequestSlice.loadingMessage
+            allProjectUsers.loadingMessage || currentProject.loadingMessage
           }
         />
       ) : (
@@ -136,49 +136,52 @@ function ProjectUpdate() {
                   </Card.Header>
                   <Card.Body>
                     <Form onSubmit={handleSubmit}>
-                      <Row>
-                        <Col className="pr-1" md="6">
-                          <Form.Group>
-                            <label>Name</label>
-                            <Form.Control
-                              value={data.name || ""}
-                              placeholder="Project Name"
-                              name="name"
-                              onChange={handleChange}
-                              type="text"
-                              disabled={projectUser?.data?.role !== "owner"}
-                              required
-                            ></Form.Control>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                      <Row className="mt-3">
-                        <Col md="12">
-                          <Form.Group>
-                            <label>Description</label>
-                            <Form.Control
-                              cols="80"
-                              value={data.description || ""}
-                              name="description"
-                              onChange={handleChange}
-                              placeholder="Project Description"
-                              rows="4"
-                              as="textarea"
-                              disabled={projectUser?.data?.role !== "owner"}
-                            ></Form.Control>
-                          </Form.Group>
-                        </Col>
-                      </Row>
-                      <div className="mt-3 text-center">
-                        <Button
-                          className="btn-fill pull-right dashboardButton"
-                          type="submit"
-                          variant="success"
-                          disabled={projectUser?.data?.role !== "owner"}
-                        >
-                          Update
-                        </Button>
-                      </div>
+                      <fieldset disabled={editProject.loading}>
+                        <Row>
+                          <Col className="pr-1" md="6">
+                            <Form.Group>
+                              <label>Name</label>
+                              <Form.Control
+                                value={data.name || ""}
+                                placeholder="Project Name"
+                                name="name"
+                                onChange={handleChange}
+                                type="text"
+                                disabled={projectUser?.data?.role !== "owner"}
+                                required
+                              ></Form.Control>
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                        <Row className="mt-3">
+                          <Col md="12">
+                            <Form.Group>
+                              <label>Description</label>
+                              <Form.Control
+                                cols="80"
+                                value={data.description || ""}
+                                name="description"
+                                onChange={handleChange}
+                                placeholder="Project Description"
+                                rows="4"
+                                as="textarea"
+                                disabled={projectUser?.data?.role !== "owner"}
+                              ></Form.Control>
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                        <div className="mt-3 text-center">
+                          <Button
+                            className="btn-fill pull-right dashboardButton"
+                            type="submit"
+                            variant="success"
+                            disabled={projectUser?.data?.role !== "owner"}
+                          >
+                            Update
+                            {editProject.loading && <ButtonLoader />}
+                          </Button>
+                        </div>
+                      </fieldset>
                     </Form>
                   </Card.Body>
                 </Card>
@@ -207,10 +210,12 @@ function ProjectUpdate() {
                           components={animatedComponents}
                           placeholder="Select User ..."
                           options={options}
-                          isDisabled={projectUser?.data?.role !== "owner"}
-                          onChange={(e) => {
-                            setAddUser(e.value);
-                          }}
+                          value={addUser}
+                          isDisabled={
+                            projectUser?.data?.role !== "owner" ||
+                            sendRequestSlice.loading
+                          }
+                          onChange={(e) => setAddUser(e)}
                         />
                       </div>
                       <div
@@ -221,7 +226,10 @@ function ProjectUpdate() {
                         <Select
                           components={animatedComponents}
                           defaultValue={{ label: "viewer", value: "viewer" }}
-                          isDisabled={projectUser?.data?.role !== "owner"}
+                          isDisabled={
+                            projectUser?.data?.role !== "owner" ||
+                            sendRequestSlice.loading
+                          }
                           options={[
                             {
                               value: "commentor",
@@ -249,9 +257,10 @@ function ProjectUpdate() {
                         if (projectUser?.data?.role === "owner")
                           handleAddUser();
                       }}
-                      disabled={projectUser?.data?.role !== "owner"}
+                      disabled={projectUser?.data?.role !== "owner" || !addUser}
                     >
-                      Add
+                      Send
+                      {sendRequestSlice.loading && <ButtonLoader />}
                     </Button>
                   </Card.Body>
                 </Card>
