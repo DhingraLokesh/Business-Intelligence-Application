@@ -202,6 +202,21 @@ const ProjectDashboard = () => {
     }
   };
 
+  const selectFieldStyle = {
+    control: (provided) => ({
+      ...provided,
+      width: "250px",
+    }),
+    menuPortal: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    menu: (base) => ({
+      ...base,
+      width: "200px",
+    }),
+  };
+
   return (
     <div className="container-fluid">
       <div>
@@ -278,20 +293,7 @@ const ProjectDashboard = () => {
                     projectUser?.data?.role === "viewer"
                   }
                   onChange={handleChartChange}
-                  styles={{
-                    control: (provided) => ({
-                      ...provided,
-                      width: "250px",
-                    }),
-                    menuPortal: (base) => ({
-                      ...base,
-                      zIndex: 9999,
-                    }),
-                    menu: (base) => ({
-                      ...base,
-                      width: "200px",
-                    }),
-                  }}
+                  styles={selectFieldStyle}
                 />
                 {selectedChart === "pie"
                   ? selectedChart && (
@@ -299,20 +301,7 @@ const ProjectDashboard = () => {
                         <label>Selected Field : </label>
                         <Select
                           className="mt-2"
-                          styles={{
-                            control: (provided) => ({
-                              ...provided,
-                              width: "250px",
-                            }),
-                            menuPortal: (base) => ({
-                              ...base,
-                              zIndex: 9999,
-                            }),
-                            menu: (base) => ({
-                              ...base,
-                              width: "200px",
-                            }),
-                          }}
+                          styles={selectFieldStyle}
                           value={options.find(
                             (option) => option.value === selectedField.x
                           )}
@@ -330,20 +319,7 @@ const ProjectDashboard = () => {
                         <Select
                           className="mt-2"
                           menuPortalTarget={document.body}
-                          styles={{
-                            control: (provided) => ({
-                              ...provided,
-                              width: "250px", // Adjust the width as desired
-                            }),
-                            menuPortal: (base) => ({
-                              ...base,
-                              zIndex: 9999, // Set a higher value if needed
-                            }),
-                            menu: (base) => ({
-                              ...base,
-                              width: "200px", // Adjust the width as desired
-                            }),
-                          }}
+                          styles={selectFieldStyle}
                           value={options.find(
                             (option) => option.value === selectedField.x
                           )}
