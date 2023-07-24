@@ -11,8 +11,4 @@ const connectMongo = async () => {
   }
 };
 
-const disconnectMongo = async () => {
-  await mongoose.disconnect();
-};
-
-export { connectMongo, disconnectMongo };
+export { connectMongo };

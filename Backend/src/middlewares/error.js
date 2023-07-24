@@ -1,5 +1,4 @@
 import httpStatus from "http-status";
-import config from "../configuration/config-variables/index.js";
 import ApiError from "../utils/api-error/index.js"
 
 // middleware to controll error
@@ -16,10 +15,6 @@ const errorConverter = (err, req, res, next) => {
 // middleware to handle error
 const errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
-  if (config.env === "production" && !err.isOperational) {
-    statusCode = httpStatus.INTERNAL_SERVER_ERROR;
-    message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
-  }
 
   res.locals.errorMessage = err.message;
   res.locals.stack = err.stack;
@@ -29,10 +24,6 @@ const errorHandler = (err, req, res, next) => {
     message,
     stack: err.stack,
   };
-
-  if (config.env === "development") {
-    console.error(err);
-  }
 
   res.status(statusCode).send(response);
 };

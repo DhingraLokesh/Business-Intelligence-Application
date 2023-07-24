@@ -4,6 +4,7 @@ import validate from "../../middlewares/validate.js";
 import * as authValidate from "../../validations/auth.validation.js";
 
 const router = express.Router();
+
 // route to handle register request
 router
   .route("/register")
