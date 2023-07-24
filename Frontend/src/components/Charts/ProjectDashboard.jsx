@@ -94,6 +94,7 @@ const ProjectDashboard = () => {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProject.data]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -246,245 +247,341 @@ const ProjectDashboard = () => {
           {currentProject?.data?.description}
         </h6>
       </div>
-      <div className="d-flex justify-content-center">
-        {toShow && (
-          <h3
-            style={{
-              marginLeft: "5%",
-              marginTop: "1%",
-            }}
-          >
-            Select chart type and fields to generate chart !!
-          </h3>
-        )}
-      </div>
-      <div className="d-flex mt-5">
-        <div className="col-md-3 bg-light mx-3">
-          <div>
-            <h4> Select Chart Type : </h4>
+      {projectUser?.data?.role === "owner" ||
+      projectUser?.data?.role === "editor" ? (
+        <>
+          <div className="d-flex justify-content-center">
+            {toShow && (
+              <h3
+                style={{
+                  marginLeft: "5%",
+                  marginTop: "1%",
+                }}
+              >
+                Select chart type and fields to generate chart !!
+              </h3>
+            )}
+          </div>
+          <div className="d-flex mt-5">
+            <div className="col-md-3 bg-light mx-3">
+              <div>
+                <h4> Select Chart Type : </h4>
 
-            <Select
-              value={chartOptions.find(
-                (option) => option.value === selectedChart
-              )}
-              options={chartOptions}
-              className="mt-2"
-              isDisabled={
-                projectUser?.data?.role === "commenter" ||
-                projectUser?.data?.role === "viewer"
-              }
-              onChange={handleChartChange}
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  width: "250px",
-                }),
-                menuPortal: (base) => ({
-                  ...base,
-                  zIndex: 9999,
-                }),
-                menu: (base) => ({
-                  ...base,
-                  width: "200px",
-                }),
-              }}
-            />
-            {selectedChart === "pie"
-              ? selectedChart && (
-                  <div className="mt-3">
-                    <label>Selected Field : </label>
-                    <Select
-                      className="mt-2"
-                      styles={{
-                        control: (provided) => ({
-                          ...provided,
-                          width: "250px",
-                        }),
-                        menuPortal: (base) => ({
-                          ...base,
-                          zIndex: 9999,
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          width: "200px",
-                        }),
-                      }}
-                      value={options.find(
-                        (option) => option.value === selectedField.x
-                      )}
-                      options={options}
-                      onChange={(e) => {
-                        handleFieldChange(e.value, true);
-                      }}
-                    />
-                  </div>
-                )
-              : !(selectedChart === "pie") &&
-                selectedChart && (
-                  <div className="mt-3">
-                    <label>Selected Field X : </label>
-                    <Select
-                      className="mt-2"
-                      menuPortalTarget={document.body}
-                      styles={{
-                        control: (provided) => ({
-                          ...provided,
-                          width: "250px", // Adjust the width as desired
-                        }),
-                        menuPortal: (base) => ({
-                          ...base,
-                          zIndex: 9999, // Set a higher value if needed
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          width: "200px", // Adjust the width as desired
-                        }),
-                      }}
-                      value={options.find(
-                        (option) => option.value === selectedField.x
-                      )}
-                      options={options.filter((option) => {
-                        return option.value !== selectedField.y;
-                      })}
-                      onChange={(e) => {
-                        handleFieldChange(e.value, true);
-                      }}
-                    />
-                    {selectedField.x && (
+                <Select
+                  value={chartOptions.find(
+                    (option) => option.value === selectedChart
+                  )}
+                  options={chartOptions}
+                  className="mt-2"
+                  isDisabled={
+                    projectUser?.data?.role === "commenter" ||
+                    projectUser?.data?.role === "viewer"
+                  }
+                  onChange={handleChartChange}
+                  styles={{
+                    control: (provided) => ({
+                      ...provided,
+                      width: "250px",
+                    }),
+                    menuPortal: (base) => ({
+                      ...base,
+                      zIndex: 9999,
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      width: "200px",
+                    }),
+                  }}
+                />
+                {selectedChart === "pie"
+                  ? selectedChart && (
                       <div className="mt-3">
-                        <label>Selected Field Y : </label>
+                        <label>Selected Field : </label>
                         <Select
                           className="mt-2"
                           styles={{
                             control: (provided) => ({
                               ...provided,
-                              width: "250px", // Adjust the width as desired
+                              width: "250px",
+                            }),
+                            menuPortal: (base) => ({
+                              ...base,
+                              zIndex: 9999,
+                            }),
+                            menu: (base) => ({
+                              ...base,
+                              width: "200px",
                             }),
                           }}
                           value={options.find(
-                            (option) => option.value === selectedField.y
+                            (option) => option.value === selectedField.x
                           )}
-                          options={options.filter((option) => {
-                            return (
-                              option.value !== selectedField.x &&
-                              isNumber.some((item) => item === option.value)
-                            );
-                          })}
+                          options={options}
                           onChange={(e) => {
-                            handleFieldChange(e.value, false);
+                            handleFieldChange(e.value, true);
                           }}
                         />
                       </div>
+                    )
+                  : !(selectedChart === "pie") &&
+                    selectedChart && (
+                      <div className="mt-3">
+                        <label>Selected Field X : </label>
+                        <Select
+                          className="mt-2"
+                          menuPortalTarget={document.body}
+                          styles={{
+                            control: (provided) => ({
+                              ...provided,
+                              width: "250px", // Adjust the width as desired
+                            }),
+                            menuPortal: (base) => ({
+                              ...base,
+                              zIndex: 9999, // Set a higher value if needed
+                            }),
+                            menu: (base) => ({
+                              ...base,
+                              width: "200px", // Adjust the width as desired
+                            }),
+                          }}
+                          value={options.find(
+                            (option) => option.value === selectedField.x
+                          )}
+                          options={options.filter((option) => {
+                            return option.value !== selectedField.y;
+                          })}
+                          onChange={(e) => {
+                            handleFieldChange(e.value, true);
+                          }}
+                        />
+                        {selectedField.x && (
+                          <div className="mt-3">
+                            <label>Selected Field Y : </label>
+                            <Select
+                              className="mt-2"
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  width: "250px", // Adjust the width as desired
+                                }),
+                              }}
+                              value={options.find(
+                                (option) => option.value === selectedField.y
+                              )}
+                              options={options.filter((option) => {
+                                return (
+                                  option.value !== selectedField.x &&
+                                  isNumber.some((item) => item === option.value)
+                                );
+                              })}
+                              onChange={(e) => {
+                                handleFieldChange(e.value, false);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
                     )}
+
+                {selectedField.x && (
+                  <div className="mt-3">
+                    <Form.Label htmlFor="inputTitle">Enter Title :</Form.Label>
+                    <Form.Control
+                      style={{ width: "250px" }}
+                      type="text"
+                      id="inputTitle"
+                      value={chartData?.title || ""}
+                      onChange={(e) =>
+                        setChartData({
+                          ...chartData,
+                          title: e.target.value,
+                        })
+                      }
+                    />
                   </div>
                 )}
 
-            {selectedField.x && (
-              <div className="mt-3">
-                <Form.Label htmlFor="inputTitle">Enter Title :</Form.Label>
-                <Form.Control
-                  style={{ width: "250px" }}
-                  type="text"
-                  id="inputTitle"
-                  value={chartData?.title || ""}
-                  onChange={(e) =>
-                    setChartData({
-                      ...chartData,
-                      title: e.target.value,
-                    })
-                  }
-                />
+                <div className="d-flex">
+                  <Button
+                    className="mt-3 dashboardButton"
+                    size="sm"
+                    onClick={handleGenerateChart}
+                    disabled={
+                      (selectedChart === "pie" && selectedField.x === null) ||
+                      (selectedChart !== "pie" &&
+                        (selectedField.x === null || selectedField.y === null))
+                    }
+                  >
+                    Generate
+                  </Button>
+                  <Button
+                    className="mt-3 mx-5 dashboardButton"
+                    size="sm"
+                    onClick={handleSaveChart}
+                    disabled={
+                      (selectedChart === "pie" && selectedField.x === null) ||
+                      (selectedChart !== "pie" &&
+                        (selectedField.x === null || selectedField.y === null))
+                    }
+                  >
+                    Save Chart
+                  </Button>
+                </div>
               </div>
-            )}
-
-            <div className="d-flex">
-              <Button
-                className="mt-3 dashboardButton"
-                size="sm"
-                onClick={handleGenerateChart}
-                disabled={
-                  (selectedChart === "pie" && selectedField.x === null) ||
-                  (selectedChart !== "pie" &&
-                    (selectedField.x === null || selectedField.y === null))
-                }
-              >
-                Generate
-              </Button>
-              <Button
-                className="mt-3 mx-5 dashboardButton"
-                size="sm"
-                onClick={handleSaveChart}
-                disabled={
-                  (selectedChart === "pie" && selectedField.x === null) ||
-                  (selectedChart !== "pie" &&
-                    (selectedField.x === null || selectedField.y === null))
-                }
-              >
-                Save Chart
-              </Button>
+            </div>
+            <div
+              style={{
+                marginLeft: "5%",
+              }}
+            >
+              {selectedChart === "pie"
+                ? chartData &&
+                  chartData.labels &&
+                  chartData.series && (
+                    <PieChart
+                      title={chartData?.title || `${selectedField.x}`}
+                      labels={chartData.labels}
+                      series={chartData.series}
+                    />
+                  )
+                : selectedChart === "line"
+                ? chartData &&
+                  chartData.xFieldData &&
+                  chartData.yFieldData && (
+                    <LineChart
+                      xFieldData={chartData.xFieldData}
+                      yFieldData={chartData.yFieldData}
+                      yField={chartData?.yField || ""}
+                      title={
+                        chartData?.title ||
+                        `${selectedField.x} vs ${selectedField.y}`
+                      }
+                    />
+                  )
+                : selectedChart === "bar"
+                ? chartData &&
+                  chartData.xFieldData &&
+                  chartData.yFieldData && (
+                    <BarChart
+                      xFieldData={chartData.xFieldData}
+                      yFieldData={chartData.yFieldData}
+                      yField={chartData?.yField || ""}
+                      title={
+                        chartData?.title ||
+                        `${selectedField.x} vs ${selectedField.y}`
+                      }
+                    />
+                  )
+                : selectedChart === "column"
+                ? chartData &&
+                  chartData.xFieldData &&
+                  chartData.yFieldData && (
+                    <ColumnChart
+                      xFieldData={chartData.xFieldData}
+                      yFieldData={chartData.yFieldData}
+                      yField={chartData?.yField || ""}
+                      title={
+                        chartData?.title ||
+                        `${selectedField.x} vs ${selectedField.y}`
+                      }
+                    />
+                  )
+                : null}
             </div>
           </div>
-        </div>
-        <div
-          style={{
-            marginLeft: "5%",
-          }}
-        >
-          {selectedChart === "pie"
-            ? chartData &&
-              chartData.labels &&
-              chartData.series && (
-                <PieChart
-                  title={chartData?.title || `${selectedField.x}`}
-                  labels={chartData.labels}
-                  series={chartData.series}
-                />
-              )
-            : selectedChart === "line"
-            ? chartData &&
-              chartData.xFieldData &&
-              chartData.yFieldData && (
-                <LineChart
-                  xFieldData={chartData.xFieldData}
-                  yFieldData={chartData.yFieldData}
-                  yField={chartData?.yField || ""}
-                  title={
-                    chartData?.title ||
-                    `${selectedField.x} vs ${selectedField.y}`
-                  }
-                />
-              )
-            : selectedChart === "bar"
-            ? chartData &&
-              chartData.xFieldData &&
-              chartData.yFieldData && (
-                <BarChart
-                  xFieldData={chartData.xFieldData}
-                  yFieldData={chartData.yFieldData}
-                  yField={chartData?.yField || ""}
-                  title={
-                    chartData?.title ||
-                    `${selectedField.x} vs ${selectedField.y}`
-                  }
-                />
-              )
-            : selectedChart === "column"
-            ? chartData &&
-              chartData.xFieldData &&
-              chartData.yFieldData && (
-                <ColumnChart
-                  xFieldData={chartData.xFieldData}
-                  yFieldData={chartData.yFieldData}
-                  yField={chartData?.yField || ""}
-                  title={
-                    chartData?.title ||
-                    `${selectedField.x} vs ${selectedField.y}`
-                  }
-                />
-              )
-            : null}
-        </div>
-      </div>
+        </>
+      ) : (
+        <>
+          <div className="d-flex justify-content-center">
+            {toShow && (
+              <h3
+                style={{
+                  marginLeft: "5%",
+                  marginTop: "1%",
+                }}
+              >
+                Select chart type and fields to generate chart !!
+              </h3>
+            )}
+          </div>
+          <div className="d-flex mt-5">
+            <div className="col-md-3 bg-light mx-3">
+              <div>
+                <h3> Chart Details : </h3>
+                <p>Selected Chart : {selectedChart || ""} </p>
+                {selectedChart === "pie" ? (
+                  <p>Selected Field : {selectedField?.x || ""}</p>
+                ) : (
+                  <>
+                    <p>Selected Field X-Axis : {selectedField?.x || ""}</p>
+                    <p>Selected Field Y-Axis : {selectedField?.y || ""}</p>
+                  </>
+                )}
+                <p>Title : {chartData?.title}</p>
+              </div>
+            </div>
+            <div
+              style={{
+                marginLeft: "5%",
+              }}
+            >
+              {selectedChart === "pie"
+                ? chartData &&
+                  chartData.labels &&
+                  chartData.series && (
+                    <PieChart
+                      title={chartData?.title || `${selectedField.x}`}
+                      labels={chartData.labels}
+                      series={chartData.series}
+                    />
+                  )
+                : selectedChart === "line"
+                ? chartData &&
+                  chartData.xFieldData &&
+                  chartData.yFieldData && (
+                    <LineChart
+                      xFieldData={chartData.xFieldData}
+                      yFieldData={chartData.yFieldData}
+                      yField={chartData?.yField || ""}
+                      title={
+                        chartData?.title ||
+                        `${selectedField.x} vs ${selectedField.y}`
+                      }
+                    />
+                  )
+                : selectedChart === "bar"
+                ? chartData &&
+                  chartData.xFieldData &&
+                  chartData.yFieldData && (
+                    <BarChart
+                      xFieldData={chartData.xFieldData}
+                      yFieldData={chartData.yFieldData}
+                      yField={chartData?.yField || ""}
+                      title={
+                        chartData?.title ||
+                        `${selectedField.x} vs ${selectedField.y}`
+                      }
+                    />
+                  )
+                : selectedChart === "column"
+                ? chartData &&
+                  chartData.xFieldData &&
+                  chartData.yFieldData && (
+                    <ColumnChart
+                      xFieldData={chartData.xFieldData}
+                      yFieldData={chartData.yFieldData}
+                      yField={chartData?.yField || ""}
+                      title={
+                        chartData?.title ||
+                        `${selectedField.x} vs ${selectedField.y}`
+                      }
+                    />
+                  )
+                : null}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
