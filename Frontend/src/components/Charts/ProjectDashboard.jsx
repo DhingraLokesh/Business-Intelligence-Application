@@ -26,6 +26,7 @@ import {
   getFieldDataFromJSON,
   getPieChartData,
 } from "../../utils/chartUtils";
+import { normalAlert } from "../../utils/Swal";
 
 const ProjectDashboard = () => {
   const navigate = useNavigate();
@@ -153,35 +154,51 @@ const ProjectDashboard = () => {
   const handleSaveChart = async () => {
     const projectId = location.pathname.split("/")[2];
 
-    const resp =
-      selectedChart === "pie"
-        ? await dispatch(
-            updateProject({
-              projectId,
-              chart: {
-                type: selectedChart,
-                title: chartData?.title || `${selectedField.x}`,
-                xField: selectedField.x,
-                yField: null,
-              },
-            })
-          )
-        : await dispatch(
-            updateProject({
-              projectId,
-              chart: {
-                type: selectedChart,
-                title:
-                  chartData?.title ||
-                  `${selectedField.x} vs ${selectedField.y}`,
-                xField: selectedField.x,
-                yField: selectedField.y,
-              },
-            })
-          );
+    let toCall = false;
 
-    if (resp.meta.requestStatus === "fulfilled")
-      dispatch(getProjectById(projectId));
+    if (
+      selectedChart !== currentProject?.data?.chart?.type ||
+      selectedField.x !== currentProject?.data?.chart?.xField ||
+      (selectedChart !== "pie" &&
+        selectedField.y !== currentProject?.data?.chart?.yField) ||
+      chartData?.title !== currentProject?.data?.chart?.title
+    ) {
+      toCall = true;
+    }
+
+    if (toCall) {
+      const resp =
+        selectedChart === "pie"
+          ? await dispatch(
+              updateProject({
+                projectId,
+                chart: {
+                  type: selectedChart,
+                  title: chartData?.title || `${selectedField.x}`,
+                  xField: selectedField.x,
+                  yField: null,
+                },
+              })
+            )
+          : await dispatch(
+              updateProject({
+                projectId,
+                chart: {
+                  type: selectedChart,
+                  title:
+                    chartData?.title ||
+                    `${selectedField.x} vs ${selectedField.y}`,
+                  xField: selectedField.x,
+                  yField: selectedField.y,
+                },
+              })
+            );
+
+      if (resp.meta.requestStatus === "fulfilled") {
+        normalAlert("Chart Saved !!", "", "success");
+        dispatch(getProjectById(projectId));
+      }
+    }
   };
 
   return (

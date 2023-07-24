@@ -131,6 +131,7 @@ function UserTable({ setToReload }) {
                         : user.role)
                   )}
                   options={options}
+                  menuPortalTarget={document.body}
                   onChange={(e) => {
                     setSelectedUser({
                       userId: user.user.id,
