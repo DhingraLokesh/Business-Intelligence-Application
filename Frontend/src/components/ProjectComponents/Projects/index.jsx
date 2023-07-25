@@ -18,7 +18,7 @@ function Projects() {
   useEffect(() => {
     dispatch(getAllProjectsOfUser());
     dispatch(getUser());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="mt-3">
@@ -91,7 +91,7 @@ function Projects() {
                             : ""}
                         </p>
                         <div className="go-corner">
-                          <a className="go-arrow"></a>
+                          <p className="go-arrow"></p>
                         </div>
                       </Card.Body>
                       <Card.Footer

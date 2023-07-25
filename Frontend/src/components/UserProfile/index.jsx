@@ -1,7 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import defaultAvatar from "../../assets/img/default-avatar.png";
-import "../ProjectComponents/Projects/index.css";
-// react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,6 +7,8 @@ import {
   updateUser,
   uploadImage,
 } from "../../redux/slices/authSlice";
+import defaultAvatar from "../../assets/img/default-avatar.png";
+import "../ProjectComponents/Projects/index.css";
 import Loader from "../Loader";
 import ButtonLoader from "../Loader/ButtonLoader";
 import { normalAlert } from "../../utils/Swal";

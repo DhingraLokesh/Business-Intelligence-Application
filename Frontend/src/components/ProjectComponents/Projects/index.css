@@ -52,7 +52,6 @@
   transition: opacity 0.8s ease-out;
 }
 
-/* Show the button on hover */
 .card1:hover .card-footer {
   opacity: 1;
   pointer-events: auto;

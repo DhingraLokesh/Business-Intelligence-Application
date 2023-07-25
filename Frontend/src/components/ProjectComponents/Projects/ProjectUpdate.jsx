@@ -1,6 +1,5 @@
+/* eslint-disable eqeqeq */
 import React, { useEffect, useState } from "react";
-
-// react-bootstrap components
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../../redux/slices/authSlice";
@@ -42,7 +41,7 @@ function ProjectUpdate() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [dispatch, location.pathname]);
 
   const [data, setData] = useState({
     projectId: "",
@@ -80,7 +79,7 @@ function ProjectUpdate() {
         })
         .map((user) => ({ value: user.id, label: user.username }))
     );
-  }, [allUsers, allProjectUsers, allRequests]);
+  }, [allUsers, allProjectUsers, allRequests, currentProject?.data?.id]);
 
   useEffect(() => {
     setData({
