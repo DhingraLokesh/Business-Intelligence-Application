@@ -1,4 +1,9 @@
-import { projectUserModel, projectModel, userModel } from "../models/index.js";
+import {
+  projectUserModel,
+  projectModel,
+  userModel,
+  userRequestModel,
+} from "../models/index.js";
 import ApiError from "../utils/api-error/index.js";
 import checkRole from "../utils/general/check-role.js";
 import path from "path";
@@ -7,7 +12,7 @@ import xlsx from "xlsx";
 
 // service to create project
 const createProject = async (userId, body) => {
-  const newProject = await projectModel.create({...body, owner: userId});
+  const newProject = await projectModel.create({ ...body, owner: userId });
 
   if (!newProject) {
     throw new ApiError(500, "Internal Sever Error");
@@ -83,10 +88,21 @@ const removeUserFromProject = async (projectId, userId, newUserId) => {
     throw new ApiError(401, "Unauthorized !!");
   }
 
+  const userRequest = await userRequestModel
+    .find({ from: userId, to: newUserId, project: projectId })
+    .sort({ $natural: -1 })
+    .limit(1);
+
+  if (userRequest.length !== 0 && userRequest[0].state === "accepted") {
+    userRequest[0].state = "removed";
+    await userRequest[0].save();
+  }
+
   const projectUser = await projectUserModel.findOne({
     user: newUserId,
     project: projectId,
   });
+
   if (!projectUser) {
     throw new ApiError(400, "User not found in project");
   }

@@ -23,7 +23,7 @@ const userRequestSchema = new Schema(
     },
     state: {
       type: String,
-      enum: ["pending", "accepted", "rejected"],
+      enum: ["pending", "accepted", "rejected", "removed"],
       default: "pending",
     },
   },
