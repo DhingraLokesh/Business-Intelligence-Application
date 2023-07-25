@@ -16,7 +16,7 @@ const updateProject = {
     name: Joi.string(),
     description: Joi.string().min(3).max(100),
     chart: Joi.object().keys({
-      type: Joi.string().valid("bar", "line", "pie", "column"),
+      type: Joi.string().valid("bar", "line", "donut", "column"),
       xField: Joi.string(),
       yField: Joi.string().allow(null, ""),
       title: Joi.string().allow(null, ""),

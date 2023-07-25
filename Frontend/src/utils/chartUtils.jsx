@@ -40,7 +40,7 @@ const hasNullOrUndefinedEmptyString = (arr) => {
   return false;
 };
 
-const getPieChartData = (excel, fieldName) => {
+const getDonutChartData = (excel, fieldName) => {
   const data = getFieldDataFromJSON(excel, fieldName);
   const frequencyMap = data.reduce((map, item) => {
     map[item] = (map[item] || 0) + 1;
@@ -54,7 +54,7 @@ const getPieChartData = (excel, fieldName) => {
 
 export {
   getFieldDataFromJSON,
-  getPieChartData,
+  getDonutChartData,
   checkIsNaN,
   hasNullOrUndefinedEmptyString,
 };
