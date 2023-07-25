@@ -1,9 +1,6 @@
-/* Add any other styles as needed */
-
 .comment-sidebar {
   position: fixed;
-  /* top: 77px; Adjust the top position as needed */
-  right: -300px; /* Shift the sidebar to the right */
+  right: -300px;
   width: 350px;
   height: 80%;
   background-color: #fff;
@@ -18,11 +15,11 @@
 }
 
 .comment-sidebar.right {
-  right: 0; /* Keep the sidebar on the right side */
+  right: 0;
 }
 
 .comment-sidebar.open {
-  transform: translateX(300px); /* Adjust the width of the sidebar */
+  transform: translateX(300px);
 }
 
 .comment-sidebar-header {
@@ -33,7 +30,7 @@
   border: 1px solid #dee2e6;
 }
 .list-group-item {
-  font-size: 0.9rem; /* Adjust the size as needed */
+  font-size: 0.9rem;
 }
 
 .comment-sidebar-header h3 {
@@ -48,7 +45,7 @@
   padding: 20px;
 }
 .comment-sidebar-title {
-  font-size: 1rem; /* Adjust the size as needed */
+  font-size: 1rem; 
 }
 
 .comment-sidebar-content ul {
@@ -78,5 +75,3 @@
   margin-top: 20px;
   margin-left: 10px;
 }
-
-

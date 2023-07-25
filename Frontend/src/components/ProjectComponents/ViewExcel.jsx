@@ -8,13 +8,13 @@ import Loader from "../Loader";
 
 function ProjectCreate() {
   const location = useLocation();
+  const dispatch = useDispatch();
   useEffect(() => {
     const projectId = location.pathname.split("/")[2];
     dispatch(getProjectById(projectId));
     dispatch(getExcel(projectId));
-  }, []);
+  }, [location.pathname, dispatch]);
 
-  const dispatch = useDispatch();
   const { excel } = useSelector((state) => state.project);
 
   return (

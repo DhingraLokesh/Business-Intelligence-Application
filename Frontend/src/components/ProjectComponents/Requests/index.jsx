@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-// react-bootstrap components
 import { Card, Container, Row, Col, Tab, Tabs } from "react-bootstrap";
 import Loader from "../../Loader";
 import { useDispatch, useSelector } from "react-redux";

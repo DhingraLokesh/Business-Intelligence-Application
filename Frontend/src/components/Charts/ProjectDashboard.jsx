@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import "../../assets/css/styles.css";
 import "../ProjectComponents/Projects/index.css";
-import "./index.css";
 
 import PieChart from "./PieChart";
 import BarChart from "./BarChart";
@@ -36,7 +35,9 @@ const ProjectDashboard = () => {
 
   const { excel, projectUser, currentProject } = useSelector(
     (state) => state.project
-  ); // use effect for all dispatches
+  ); 
+  
+  // use effect for all dispatches
   useEffect(() => {
     dispatch(getExcel(projectId));
     dispatch(getProjectUser(projectId));
@@ -222,7 +223,6 @@ const ProjectDashboard = () => {
       <div>
         <div className="d-flex flex-row justify-content-between">
           <h2 className="m-1 mt-3">{currentProject?.data?.name}</h2>
-          {/* <h2 className="m-3">hi</h2> */}
           <div style={{ position: "relative" }}>
             <Button
               style={{ zIndex: 500 }}
@@ -338,7 +338,7 @@ const ProjectDashboard = () => {
                               styles={{
                                 control: (provided) => ({
                                   ...provided,
-                                  width: "250px", // Adjust the width as desired
+                                  width: "250px",
                                 }),
                               }}
                               value={options.find(
