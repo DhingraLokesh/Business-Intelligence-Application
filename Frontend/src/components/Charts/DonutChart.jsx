@@ -1,7 +1,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const PieChart = (props) => {
+const DonutChart = (props) => {
   const chartData = {
     series: props.series,
     options: {
@@ -39,4 +39,4 @@ const PieChart = (props) => {
   );
 };
 
-export default PieChart;
+export default DonutChart;

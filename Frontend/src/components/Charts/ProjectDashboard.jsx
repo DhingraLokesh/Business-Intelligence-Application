@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import "../../assets/css/styles.css";
 import "../ProjectComponents/Projects/index.css";
 
-import PieChart from "./PieChart";
+import DonutChart from "./DonutChart";
 import BarChart from "./BarChart";
 import ColumnChart from "./ColumnChart";
 import LineChart from "./LineChart";
@@ -23,7 +23,7 @@ import { Button, Form } from "react-bootstrap";
 import {
   checkIsNaN,
   getFieldDataFromJSON,
-  getPieChartData,
+  getDonutChartData,
 } from "../../utils/chartUtils";
 import { normalAlert } from "../../utils/Swal";
 
@@ -65,15 +65,15 @@ const ProjectDashboard = () => {
         y: currentProject.data.chart.yField,
       });
 
-      if (currentProject.data.chart.type === "pie") {
-        const pieData = getPieChartData(
+      if (currentProject.data.chart.type === "donut") {
+        const donutData = getDonutChartData(
           excel.data,
           currentProject.data.chart.xField
         );
         setChartData({
           ...chartData,
-          labels: pieData.keysArray,
-          series: pieData.valuesArray,
+          labels: donutData.keysArray,
+          series: donutData.valuesArray,
           title: currentProject.data.chart.title,
         });
       } else {
@@ -116,7 +116,7 @@ const ProjectDashboard = () => {
 
   const chartOptions = [
     { value: "line", label: "Line Chart" },
-    { value: "pie", label: "Pie Chart" },
+    { value: "donut", label: "Donut Chart" },
     { value: "bar", label: "Bar Chart" },
     { value: "column", label: "Column Chart" },
   ];
@@ -133,12 +133,12 @@ const ProjectDashboard = () => {
   const handleGenerateChart = () => {
     setToShow(false);
 
-    if (selectedChart === "pie") {
-      const pieData = getPieChartData(excel.data, selectedField.x);
+    if (selectedChart === "donut") {
+      const donutData = getDonutChartData(excel.data, selectedField.x);
       setChartData({
         ...chartData,
-        labels: pieData.keysArray,
-        series: pieData.valuesArray,
+        labels: donutData.keysArray,
+        series: donutData.valuesArray,
       });
     } else {
       const xData = getFieldDataFromJSON(excel.data, selectedField.x);
@@ -161,7 +161,7 @@ const ProjectDashboard = () => {
     if (
       selectedChart !== currentProject?.data?.chart?.type ||
       selectedField.x !== currentProject?.data?.chart?.xField ||
-      (selectedChart !== "pie" &&
+      (selectedChart !== "donut" &&
         selectedField.y !== currentProject?.data?.chart?.yField) ||
       chartData?.title !== currentProject?.data?.chart?.title
     ) {
@@ -170,7 +170,7 @@ const ProjectDashboard = () => {
 
     if (toCall) {
       const resp =
-        selectedChart === "pie"
+        selectedChart === "donut"
           ? await dispatch(
               updateProject({
                 projectId,
@@ -295,7 +295,7 @@ const ProjectDashboard = () => {
                   onChange={handleChartChange}
                   styles={selectFieldStyle}
                 />
-                {selectedChart === "pie"
+                {selectedChart === "donut"
                   ? selectedChart && (
                       <div className="mt-3">
                         <label>Selected Field : </label>
@@ -312,7 +312,7 @@ const ProjectDashboard = () => {
                         />
                       </div>
                     )
-                  : !(selectedChart === "pie") &&
+                  : !(selectedChart === "donut") &&
                     selectedChart && (
                       <div className="mt-3">
                         <label>Selected Field X : </label>
@@ -383,8 +383,8 @@ const ProjectDashboard = () => {
                     size="sm"
                     onClick={handleGenerateChart}
                     disabled={
-                      (selectedChart === "pie" && selectedField.x === null) ||
-                      (selectedChart !== "pie" &&
+                      (selectedChart === "donut" && selectedField.x === null) ||
+                      (selectedChart !== "donut" &&
                         (selectedField.x === null || selectedField.y === null))
                     }
                   >
@@ -395,8 +395,8 @@ const ProjectDashboard = () => {
                     size="sm"
                     onClick={handleSaveChart}
                     disabled={
-                      (selectedChart === "pie" && selectedField.x === null) ||
-                      (selectedChart !== "pie" &&
+                      (selectedChart === "donut" && selectedField.x === null) ||
+                      (selectedChart !== "donut" &&
                         (selectedField.x === null || selectedField.y === null))
                     }
                   >
@@ -410,11 +410,11 @@ const ProjectDashboard = () => {
                 marginLeft: "5%",
               }}
             >
-              {selectedChart === "pie"
+              {selectedChart === "donut"
                 ? chartData &&
                   chartData.labels &&
                   chartData.series && (
-                    <PieChart
+                    <DonutChart
                       title={chartData?.title || `${selectedField.x}`}
                       labels={chartData.labels}
                       series={chartData.series}
@@ -485,7 +485,7 @@ const ProjectDashboard = () => {
               <div>
                 <h3> Chart Details : </h3>
                 <p>Selected Chart : {selectedChart || ""} </p>
-                {selectedChart === "pie" ? (
+                {selectedChart === "donut" ? (
                   <p>Selected Field : {selectedField?.x || ""}</p>
                 ) : (
                   <>
@@ -501,11 +501,11 @@ const ProjectDashboard = () => {
                 marginLeft: "5%",
               }}
             >
-              {selectedChart === "pie"
+              {selectedChart === "donut"
                 ? chartData &&
                   chartData.labels &&
                   chartData.series && (
-                    <PieChart
+                    <DonutChart
                       title={chartData?.title || `${selectedField.x}`}
                       labels={chartData.labels}
                       series={chartData.series}

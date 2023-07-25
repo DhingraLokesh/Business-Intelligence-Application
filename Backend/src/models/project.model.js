@@ -17,7 +17,7 @@ const projectSchema = new Schema(
     chart: {
       type: {
         type: String,
-        enum: ["bar", "line", "pie", "column"],
+        enum: ["bar", "line", "donut", "column"],
       },
       xField: {
         type: String,
