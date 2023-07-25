@@ -18,10 +18,7 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.string()
       .required()
-      .description("JWT access expiration minutes"),
-    JWT_REFRESH_EXPIRATION_DAYS: Joi.string()
-      .required()
-      .description("JWT refresh expiration days"),
+      .description("JWT access expiration minutes")
   })
   .unknown();
 
@@ -43,8 +40,6 @@ const config = {
   jwt: {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
-    refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
-    resetPasswordExpirationMinutes: 60,
   },
 };
 

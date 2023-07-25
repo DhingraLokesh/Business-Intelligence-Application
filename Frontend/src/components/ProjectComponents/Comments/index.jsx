@@ -29,7 +29,6 @@ const Comments = ({ onClose }) => {
   }, []);
 
   const handleCommentFromServer = (request) => {
-    console.log("request", request);
     dispatch(addCommentSocket(request));
   };
 
