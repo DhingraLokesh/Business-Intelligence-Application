@@ -55,10 +55,11 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem("token");
+      localStorage.removeItem("tokenExpiration");
       state.token = null;
       state.user.data = {};
       state.loggedIn = false;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -72,6 +73,10 @@ const authSlice = createSlice({
         state.user.data = action.payload.user;
         state.token = action.payload.tokens.access.token;
         localStorage.setItem("token", action.payload.tokens.access.token);
+        localStorage.setItem(
+          "tokenExpiration",
+          action.payload.tokens.access.expires
+        );
         state.loggedIn = true;
         state.register.loadingMessage = null;
         state.register.errorMessage = null;
@@ -91,6 +96,10 @@ const authSlice = createSlice({
         state.user.data = action.payload.user;
         state.token = action.payload.tokens.access.token;
         localStorage.setItem("token", action.payload.tokens.access.token);
+        localStorage.setItem(
+          "tokenExpiration",
+          action.payload.tokens.access.expires
+        );
         state.loggedIn = true;
         state.login.loadingMessage = null;
         state.login.errorMessage = null;
