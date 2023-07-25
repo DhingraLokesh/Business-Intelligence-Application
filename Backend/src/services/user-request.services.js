@@ -21,8 +21,12 @@ const sendRequestToJoinProject = async (sender, projectId, role, receiver) => {
     .find({ to: receiver, from: sender, project: projectId, role: role })
     .sort({ $natural: -1 })
     .limit(1);
-  if (reqExists.length !== 0 && reqExists[0].state !== "rejected") {
-    throw new ApiError(400, "Request Already Exists");
+
+  if (reqExists.length !== 0) {
+    if (reqExists[0].state === "pending")
+      throw new ApiError(400, "Request Already Exists");
+    else if (reqExists[0].state === "accepted")
+      throw new ApiError(400, "Request Already Accepted");
   }
 
   const userRequest = await userRequestModel();
