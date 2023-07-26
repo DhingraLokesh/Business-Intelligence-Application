@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import "../../../assets/css/styles.css";
 import {
   addComment,
   addCommentSocket,
@@ -12,26 +11,23 @@ import {
 import { getProjectUser } from "../../../redux/slices/projectSlice";
 import Loader from "../../Loader";
 import socket from "../../../utils/socket";
+import "../../../assets/css/styles.css";
 
 const Comments = ({ onClose }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const [comment, setComment] = useState("");
-  const sidebarRef = useRef(null);
 
   const { allComments, newComment } = useSelector((state) => state.comment);
   const { projectUser } = useSelector((state) => state.project);
+  
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     return () => {
       socket.disconnect();
     };
   }, []);
-
-  const handleCommentFromServer = (request) => {
-    dispatch(addCommentSocket(request));
-  };
-
+  
   useEffect(() => {
     const projectId = location.pathname.split("/")[2];
 
@@ -61,6 +57,13 @@ const Comments = ({ onClose }) => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [onClose]);
+  
+  const sidebarRef = useRef(null);
+
+  const handleCommentFromServer = (request) => {
+    dispatch(addCommentSocket(request));
+  };
+
 
   const handleInputChange = (event) => {
     setComment(event.target.value);

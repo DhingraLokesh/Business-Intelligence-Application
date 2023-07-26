@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Container, Row, Col } from "react-bootstrap";
-import "../../../assets/css/styles.css";
-import "./index.css";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjectsOfUser } from "../../../redux/slices/projectSlice";
-import { useNavigate } from "react-router-dom";
-import Loader from "../../Loader";
 import { getUser } from "../../../redux/slices/authSlice";
+import Loader from "../../Loader";
+import "../../../assets/css/styles.css";
+import "./index.css";
 
 function Projects() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { allUserProjects } = useSelector((state) => state.project);
 
   const [isMyProjects, setIsMyProjects] = useState(true);

@@ -30,8 +30,11 @@ const createProject = async (userId, body) => {
 };
 
 // service to update project
-const updateProject = async (body) => {
+const updateProject = async (userId, body) => {
   const { projectId } = body;
+  if(body.chart){
+    body.chart.user = userId;
+  }
   const project = await projectModel.findByIdAndUpdate(projectId, body);
   if (!project) throw new ApiError(404, "Project not found");
   return project;
@@ -49,7 +52,13 @@ const findAllProjects = async () => {
 
 // service to get single project with id
 const findProjectById = async (projectId) => {
-  const project = await projectModel.findById(projectId);
+  const project = await projectModel.findById(projectId).populate([
+    {
+      path: "chart.user",
+      model : "User",
+      select : "username"
+    }
+  ]);
   if (!project) {
     throw new ApiError(404, "Project Not Found");
   }

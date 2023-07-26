@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getProjectById, getExcel } from "../../redux/slices/projectSlice";
-import JSONData from "./JSONData";
 import { useLocation } from "react-router-dom";
+import JSONData from "./JSONData";
+import { getProjectById, getExcel } from "../../redux/slices/projectSlice";
 import Loader from "../Loader";
 
 function ProjectCreate() {
   const location = useLocation();
   const dispatch = useDispatch();
+
   useEffect(() => {
     const projectId = location.pathname.split("/")[2];
     dispatch(getProjectById(projectId));

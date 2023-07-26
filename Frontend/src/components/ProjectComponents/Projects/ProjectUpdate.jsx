@@ -2,11 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "../../../redux/slices/authSlice";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import UserTable from "./AllUsersTable";
+import { getAllUsers } from "../../../redux/slices/authSlice";
 import {
   getAllUsersOfProject,
   getProjectById,
@@ -17,17 +16,35 @@ import {
   getAllRequests,
   sendRequest,
 } from "../../../redux/slices/requestSlice";
-import Loader from "../../Loader";
+import UserTable from "./AllUsersTable";
 import socket from "../../../utils/socket";
-import "./index.css";
+import Loader from "../../Loader";
 import ButtonLoader from "../../Loader/ButtonLoader";
 import { normalAlert } from "../../../utils/Swal";
+import "./index.css";
 
 const animatedComponents = makeAnimated();
 
 function ProjectUpdate() {
   const dispatch = useDispatch();
   const location = useLocation();
+
+  const [toReload, setToReload] = useState(true);
+  const [options, setOptions] = useState([]);
+  const [addUser, setAddUser] = useState(null);
+  const [selectedRole, setSelectedRole] = useState("viewer");
+  const [data, setData] = useState({
+    projectId: "",
+    name: "",
+    description: "",
+  });
+
+  const { allUsers } = useSelector((state) => state.auth);
+  const { currentProject, allProjectUsers, projectUser, editProject } =
+    useSelector((state) => state.project);
+  const { allRequests, sendRequestSlice } = useSelector(
+    (state) => state.request
+  );
 
   useEffect(() => {
     const projectId = location.pathname.split("/")[2];
@@ -42,25 +59,6 @@ function ProjectUpdate() {
       socket.disconnect();
     };
   }, [dispatch, location.pathname]);
-
-  const [data, setData] = useState({
-    projectId: "",
-    name: "",
-    description: "",
-  });
-
-  const [toReload, setToReload] = useState(true);
-
-  const { allUsers } = useSelector((state) => state.auth);
-  const { currentProject, allProjectUsers, projectUser, editProject } =
-    useSelector((state) => state.project);
-  const { allRequests, sendRequestSlice } = useSelector(
-    (state) => state.request
-  );
-
-  const [options, setOptions] = useState([]);
-  const [addUser, setAddUser] = useState(null);
-  const [selectedRole, setSelectedRole] = useState("viewer");
 
   useEffect(() => {
     setOptions(

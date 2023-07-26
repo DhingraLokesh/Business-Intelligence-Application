@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Card, Container, Row, Col, Tab, Tabs } from "react-bootstrap";
-import Loader from "../../Loader";
 import { useDispatch, useSelector } from "react-redux";
-import RequestTable from "./RequestTable";
 import {
   getAllRequests,
   receiveSocketRequest,
 } from "../../../redux/slices/requestSlice";
 import { getUser } from "../../../redux/slices/authSlice";
+import RequestTable from "./RequestTable";
 import socket from "../../../utils/socket";
+import Loader from "../../Loader";
 
 function Requests() {
   const dispatch = useDispatch();
+
+  const [key, setKey] = useState(true);
+
+  const { user } = useSelector((state) => state.auth);
+  const { allRequests } = useSelector((state) => state.request);
 
   useEffect(() => {
     return () => {
       socket.disconnect();
     };
   }, []);
-
-  const { user } = useSelector((state) => state.auth);
-  const { allRequests } = useSelector((state) => state.request);
-
-  const [key, setKey] = useState(true);
-
-  const handleRequestFromServer = (request) => {
-    setKey(false);
-    dispatch(receiveSocketRequest(request));
-  };
-
   useEffect(() => {
     if (!user?.data?.id) {
       dispatch(getUser());
@@ -45,6 +39,11 @@ function Requests() {
       socket.off("requestFromServer", handleRequestFromServer);
     };
   }, [dispatch, user]);
+
+  const handleRequestFromServer = (request) => {
+    setKey(false);
+    dispatch(receiveSocketRequest(request));
+  };
 
   return (
     <>

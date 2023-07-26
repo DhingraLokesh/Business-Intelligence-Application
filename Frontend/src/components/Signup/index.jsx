@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import styles from "./styles.module.css";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../redux/slices/authSlice";
 import ButtonLoader from "../Loader/ButtonLoader";
+import styles from "./styles.module.css";
 
 const Signup = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -13,10 +16,8 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const { errorMessage, loading } = useSelector((state) => state.auth.register);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { errorMessage, loading } = useSelector((state) => state.auth.register);
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });

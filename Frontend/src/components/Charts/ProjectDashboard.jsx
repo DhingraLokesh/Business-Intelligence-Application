@@ -31,12 +31,20 @@ const ProjectDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+
   const projectId = location.pathname.split("/")[2];
 
   const { excel, projectUser, currentProject } = useSelector(
     (state) => state.project
-  ); 
-  
+  );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedChart, setSelectedChart] = useState("");
+  const [selectedField, setSelectedField] = useState({ x: null, y: null });
+  const [options, setOptions] = useState([]);
+  const [isNumber, setIsNumber] = useState(null);
+  const [chartData, setChartData] = useState(null);
+  const [toShow, setToShow] = useState(true);
+
   // use effect for all dispatches
   useEffect(() => {
     dispatch(getExcel(projectId));
@@ -97,14 +105,6 @@ const ProjectDashboard = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProject.data]);
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedChart, setSelectedChart] = useState("");
-  const [selectedField, setSelectedField] = useState({ x: null, y: null });
-  const [options, setOptions] = useState([]);
-  const [isNumber, setIsNumber] = useState(null);
-  const [chartData, setChartData] = useState(null);
-  const [toShow, setToShow] = useState(true);
 
   useEffect(() => {
     setToShow(false);
@@ -376,7 +376,32 @@ const ProjectDashboard = () => {
                     />
                   </div>
                 )}
-
+                {currentProject?.data?.chart?.user?.username && (
+                  <div className="mt-3">
+                    {selectedChart !== currentProject?.data?.chart?.type ||
+                    selectedField.x !== currentProject?.data?.chart?.xField ||
+                    (selectedChart !== "donut" &&
+                      selectedField.y !==
+                        currentProject?.data?.chart?.yField) ||
+                    chartData?.title !== currentProject?.data?.chart?.title ? (
+                      <div>
+                        <p style={{ color: "red" }}>* Unsaved Changes</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <span style={{ color: "green" }}>Last saved by : </span>
+                        {currentProject?.data?.chart?.user?.id ===
+                        projectUser?.data?.user ? (
+                          <span style={{ color: "green" }}>You</span>
+                        ) : (
+                          <h6 style={{ color: "green" }}>
+                            {currentProject?.data?.chart?.user?.username}
+                          </h6>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="d-flex">
                   <Button
                     className="mt-3 dashboardButton"
@@ -407,7 +432,7 @@ const ProjectDashboard = () => {
             </div>
             <div
               style={{
-                marginLeft: "5%",
+                marginLeft: "2%",
               }}
             >
               {selectedChart === "donut"
@@ -480,82 +505,95 @@ const ProjectDashboard = () => {
               </h3>
             )}
           </div>
-          <div className="d-flex mt-5">
-            <div className="col-md-3 bg-light mx-3">
-              <div>
-                <h3> Chart Details : </h3>
-                <p>Selected Chart : {selectedChart || ""} </p>
-                {selectedChart === "donut" ? (
-                  <p>Selected Field : {selectedField?.x || ""}</p>
-                ) : (
-                  <>
-                    <p>Selected Field X-Axis : {selectedField?.x || ""}</p>
-                    <p>Selected Field Y-Axis : {selectedField?.y || ""}</p>
-                  </>
-                )}
-                <p>Title : {chartData?.title}</p>
+          {currentProject?.data?.chart?.type ? (
+            <div className="d-flex mt-5">
+              <div className="col-md-3 bg-light mx-3">
+                <div>
+                  <h3> Chart Details : </h3>
+                  <p>Selected Chart : {selectedChart || ""} </p>
+                  {selectedChart === "donut" ? (
+                    <p>Selected Field : {selectedField?.x || ""}</p>
+                  ) : (
+                    <>
+                      <p>Selected Field X-Axis : {selectedField?.x || ""}</p>
+                      <p>Selected Field Y-Axis : {selectedField?.y || ""}</p>
+                    </>
+                  )}
+                  {currentProject?.data?.chart?.user?.username && (
+                    <p className="mt-3">
+                      <span style={{ color: "green" }}>Last saved by : </span>
+                      <span style={{ color: "green" }}>
+                        {currentProject?.data?.chart?.user?.username}
+                      </span>
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div
+                style={{
+                  marginLeft: "2%",
+                }}
+              >
+                {selectedChart === "donut"
+                  ? chartData &&
+                    chartData.labels &&
+                    chartData.series && (
+                      <DonutChart
+                        title={chartData?.title || `${selectedField.x}`}
+                        labels={chartData.labels}
+                        series={chartData.series}
+                      />
+                    )
+                  : selectedChart === "line"
+                  ? chartData &&
+                    chartData.xFieldData &&
+                    chartData.yFieldData && (
+                      <LineChart
+                        xFieldData={chartData.xFieldData}
+                        yFieldData={chartData.yFieldData}
+                        yField={chartData?.yField || ""}
+                        title={
+                          chartData?.title ||
+                          `${selectedField.x} vs ${selectedField.y}`
+                        }
+                      />
+                    )
+                  : selectedChart === "bar"
+                  ? chartData &&
+                    chartData.xFieldData &&
+                    chartData.yFieldData && (
+                      <BarChart
+                        xFieldData={chartData.xFieldData}
+                        yFieldData={chartData.yFieldData}
+                        yField={chartData?.yField || ""}
+                        title={
+                          chartData?.title ||
+                          `${selectedField.x} vs ${selectedField.y}`
+                        }
+                      />
+                    )
+                  : selectedChart === "column"
+                  ? chartData &&
+                    chartData.xFieldData &&
+                    chartData.yFieldData && (
+                      <ColumnChart
+                        xFieldData={chartData.xFieldData}
+                        yFieldData={chartData.yFieldData}
+                        yField={chartData?.yField || ""}
+                        title={
+                          chartData?.title ||
+                          `${selectedField.x} vs ${selectedField.y}`
+                        }
+                      />
+                    )
+                  : null}
               </div>
             </div>
-            <div
-              style={{
-                marginLeft: "5%",
-              }}
-            >
-              {selectedChart === "donut"
-                ? chartData &&
-                  chartData.labels &&
-                  chartData.series && (
-                    <DonutChart
-                      title={chartData?.title || `${selectedField.x}`}
-                      labels={chartData.labels}
-                      series={chartData.series}
-                    />
-                  )
-                : selectedChart === "line"
-                ? chartData &&
-                  chartData.xFieldData &&
-                  chartData.yFieldData && (
-                    <LineChart
-                      xFieldData={chartData.xFieldData}
-                      yFieldData={chartData.yFieldData}
-                      yField={chartData?.yField || ""}
-                      title={
-                        chartData?.title ||
-                        `${selectedField.x} vs ${selectedField.y}`
-                      }
-                    />
-                  )
-                : selectedChart === "bar"
-                ? chartData &&
-                  chartData.xFieldData &&
-                  chartData.yFieldData && (
-                    <BarChart
-                      xFieldData={chartData.xFieldData}
-                      yFieldData={chartData.yFieldData}
-                      yField={chartData?.yField || ""}
-                      title={
-                        chartData?.title ||
-                        `${selectedField.x} vs ${selectedField.y}`
-                      }
-                    />
-                  )
-                : selectedChart === "column"
-                ? chartData &&
-                  chartData.xFieldData &&
-                  chartData.yFieldData && (
-                    <ColumnChart
-                      xFieldData={chartData.xFieldData}
-                      yFieldData={chartData.yFieldData}
-                      yField={chartData?.yField || ""}
-                      title={
-                        chartData?.title ||
-                        `${selectedField.x} vs ${selectedField.y}`
-                      }
-                    />
-                  )
-                : null}
+          ) : (
+            <div className="d-flex justify-content-center">
+              <h2 className="mt-5">Chart Not Saved Yet !!</h2>
             </div>
-          </div>
+          )}
         </>
       )}
     </div>

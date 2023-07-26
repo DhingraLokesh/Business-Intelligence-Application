@@ -28,6 +28,10 @@ const projectSchema = new Schema(
       title: {
         type: String,
       },
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
     },
   },
   {

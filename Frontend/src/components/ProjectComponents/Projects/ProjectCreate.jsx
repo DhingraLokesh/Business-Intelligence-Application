@@ -12,10 +12,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createProject, uploadExcel } from "../../../redux/slices/projectSlice";
-import Loader from "../../Loader";
 import { hasNullOrUndefinedEmptyString } from "../../../utils/chartUtils";
-import "./index.css";
+import Loader from "../../Loader";
 import { normalAlert } from "../../../utils/Swal";
+import "./index.css";
 
 function ProjectCreate() {
   const dispatch = useDispatch();
