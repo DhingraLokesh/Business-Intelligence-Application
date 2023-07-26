@@ -25,6 +25,9 @@ const LineChart = (props) => {
       title: {
         text: props.title,
         align: "left",
+        style: {
+          fontSize: "20px",
+        }
       },
       grid: {
         row: {

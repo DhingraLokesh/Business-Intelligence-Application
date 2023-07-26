@@ -12,6 +12,7 @@ import { confirmAlert, normalAlert } from "../../../utils/Swal";
 
 function UserTable({ setToReload }) {
   const dispatch = useDispatch();
+  
   const { allProjectUsers, projectUser } = useSelector(
     (state) => state.project
   );

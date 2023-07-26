@@ -34,6 +34,9 @@ const ColumnChart = (props) => {
       title: {
         text: props.title,
         align: "left",
+        style: {
+          fontSize: "20px",
+        }
       },
       fill: {
         opacity: 1,

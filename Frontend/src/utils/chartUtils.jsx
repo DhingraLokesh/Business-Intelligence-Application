@@ -3,7 +3,7 @@ const getFieldDataFromJSON = (excel, fieldName) => {
 };
 
 const checkIsNaN = (excel) => {
-  const dateRegex = /^\d{1,2}[\/.-]\d{1,2}[\/.-]\d{4}$/;
+  const dateRegex = /^\d{1,2}[/.-]\d{1,2}[/.-]\d{4}$/;
   const uniqueFieldsSet = new Set();
 
   excel.forEach((obj) => {

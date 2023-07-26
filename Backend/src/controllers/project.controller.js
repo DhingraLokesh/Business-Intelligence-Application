@@ -37,7 +37,7 @@ const getExcelController = catchAsync(async (req, res) => {
 
 // controller to update project
 const updateProject = catchAsync(async (req, res) => {
-  const project = await projectServices.updateProject(req.body);
+  const project = await projectServices.updateProject(req.loggedInUserId, req.body);
   res.send(project);
 });
 

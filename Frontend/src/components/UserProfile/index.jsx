@@ -7,11 +7,11 @@ import {
   updateUser,
   uploadImage,
 } from "../../redux/slices/authSlice";
-import defaultAvatar from "../../assets/img/default-avatar.png";
-import "../ProjectComponents/Projects/index.css";
 import Loader from "../Loader";
 import ButtonLoader from "../Loader/ButtonLoader";
 import { normalAlert } from "../../utils/Swal";
+import "../ProjectComponents/Projects/index.css";
+import defaultAvatar from "../../assets/img/default-avatar.png";
 
 function User() {
   const dispatch = useDispatch();
@@ -20,7 +20,6 @@ function User() {
   const [finalFile, setFinalFile] = useState(null);
   const [isImage, setIsImage] = useState(false);
   const [toReload, setToReload] = useState(true);
-
   const [data, setData] = useState({
     firstName: "",
     lastName: "",

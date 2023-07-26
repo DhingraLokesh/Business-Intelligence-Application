@@ -9,6 +9,7 @@ import { confirmAlert, normalAlert } from "../../../utils/Swal";
 
 function UserTable(props) {
   const dispatch = useDispatch();
+  
   const handleRequestChange = (req, isAccept) => {
     confirmAlert(
       `Do you want to ${
