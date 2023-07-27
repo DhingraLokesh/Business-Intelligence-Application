@@ -10,7 +10,7 @@ const router = express.Router();
 router
   .route("/send")
   .post(
-    auth("sendRequestToJoinProject"),
+    auth(),
     validate(userRequestValidate.sendRequestToJoinProject),
     userRequestController.sendRequestToJoinProject
   );
@@ -19,7 +19,7 @@ router
 router
   .route("/handle")
   .post(
-    auth("handleRequestToJoinProject"),
+    auth(),
     validate(userRequestValidate.handleRequestToJoinProject),
     userRequestController.handleRequestToJoinProject
   );
@@ -27,6 +27,6 @@ router
 // route to get all requests sent and received by user
 router
   .route("/get-all")
-  .get(auth("getAllRequests"), userRequestController.getAllRequests);
+  .get(auth(), userRequestController.getAllRequests);
 
 export default router;

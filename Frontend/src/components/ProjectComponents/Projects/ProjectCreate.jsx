@@ -116,6 +116,10 @@ function ProjectCreate() {
                             className="mt-1"
                             value={projectData.description || ""}
                             name="description"
+                            style={{
+                              resize: "none",
+                              height: "100px",
+                            }}
                             onChange={handleChange}
                             placeholder="Project Description"
                             rows="4"

@@ -38,6 +38,20 @@ const getImageController = catchAsync(async (req, res) => {
   }
 });
 
+// controller to get image from uploads folder 
+// for sending it to frontend
+const getPublicImageController = catchAsync(async (req, res) => {
+  try {
+    const image = await userService.getImage(req.params.userId);
+    res.setHeader('Content-Type', image.contentType);
+    res.send(image.data);
+  } catch (error) {
+    console.log("error getting Image ", error);
+    throw new ApiError(500, "Internal Sever Error");
+  }
+});
+
+
 // controller to get user by id (from req.params.UserId)
 const getAnyUserById = catchAsync(async (req, res) => {
   const user = await userService.getAnyUserById(req.params.userId);
@@ -77,4 +91,5 @@ export {
   getUsersProject,
   getAnyUserById,
   getUserByEmail,
+  getPublicImageController,
 };

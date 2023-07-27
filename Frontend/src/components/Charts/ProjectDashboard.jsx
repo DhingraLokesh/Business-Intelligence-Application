@@ -107,8 +107,10 @@ const ProjectDashboard = () => {
   }, [currentProject.data]);
 
   useEffect(() => {
-    setToShow(false);
-  }, [chartData]);
+    if (selectedChart) {
+      setToShow(false);
+    }
+  }, [selectedChart]);
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -265,20 +267,8 @@ const ProjectDashboard = () => {
       {projectUser?.data?.role === "owner" ||
       projectUser?.data?.role === "editor" ? (
         <>
-          <div className="d-flex justify-content-center">
-            {toShow && (
-              <h3
-                style={{
-                  marginLeft: "5%",
-                  marginTop: "1%",
-                }}
-              >
-                Select chart type and fields to generate chart !!
-              </h3>
-            )}
-          </div>
-          <div className="d-flex mt-5">
-            <div className="col-md-3 bg-light mx-3">
+          <div className="d-flex" >
+            <div style={{marginTop : "3%"}} className="col-md-3 bg-light mx-3">
               <div>
                 <h4> Select Chart Type : </h4>
 
@@ -433,8 +423,21 @@ const ProjectDashboard = () => {
             <div
               style={{
                 marginLeft: "2%",
+                width : "100%"
               }}
             >
+              {toShow && (
+                <h5
+                  style={{
+                    marginLeft: "5%",
+                    marginTop: "1%",
+                    marginBottom: "10%",
+                  }}
+                >
+                  Select chart type and fields to generate chart !!
+                </h5>
+              )}
+
               {selectedChart === "donut"
                 ? chartData &&
                   chartData.labels &&
@@ -493,18 +496,6 @@ const ProjectDashboard = () => {
         </>
       ) : (
         <>
-          <div className="d-flex justify-content-center">
-            {toShow && (
-              <h3
-                style={{
-                  marginLeft: "5%",
-                  marginTop: "1%",
-                }}
-              >
-                Select chart type and fields to generate chart !!
-              </h3>
-            )}
-          </div>
           {currentProject?.data?.chart?.type ? (
             <div className="d-flex mt-5">
               <div className="col-md-3 bg-light mx-3">

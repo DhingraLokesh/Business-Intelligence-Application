@@ -180,6 +180,10 @@ function ProjectUpdate() {
                                 onChange={handleChange}
                                 placeholder="Project Description"
                                 rows="4"
+                                style={{
+                                  resize: "none",
+                                  height: "100px",
+                                }}
                                 as="textarea"
                                 disabled={projectUser?.data?.role !== "owner"}
                               ></Form.Control>
@@ -232,6 +236,12 @@ function ProjectUpdate() {
                             sendRequestSlice.loading
                           }
                           onChange={(e) => setAddUser(e)}
+                          styles={{
+                            menuList: (provided) => ({
+                              ...provided,
+                              maxHeight: "210px",
+                            }),
+                          }}
                         />
                       </div>
                       <div

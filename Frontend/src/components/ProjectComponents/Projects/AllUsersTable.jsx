@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import {
@@ -11,8 +12,9 @@ import {
 import { confirmAlert, normalAlert } from "../../../utils/Swal";
 
 function UserTable({ setToReload }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const { allProjectUsers, projectUser } = useSelector(
     (state) => state.project
   );
@@ -150,6 +152,13 @@ function UserTable({ setToReload }) {
                   "No Actions"
                 ) : (
                   <>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => navigate(`/profile/${user.user.id}`)}
+                    >
+                      View
+                    </Button>
                     {selectedUser.userId === user.user.id &&
                       selectedUser.role !== user.role && (
                         <Button

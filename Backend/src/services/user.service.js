@@ -11,7 +11,7 @@ const getUserById = async (userId) => {
   return user;
 };
 
-// service to get image corresponding to req.loggedInUserID
+// service to get image corresponding to userId
 const getImage = async (userId) => {
   const imagePath = path.join(
     path.dirname(new URL(import.meta.url).pathname),
