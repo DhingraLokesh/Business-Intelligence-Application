@@ -110,7 +110,7 @@ function UserTable({ setToReload }) {
           <th>Username</th>
           <th>Email</th>
           <th>Role</th>
-          {projectUser?.data?.role === "owner" && <th>Action</th>}
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -146,40 +146,46 @@ function UserTable({ setToReload }) {
                 user.role
               )}
             </td>
-            {projectUser?.data?.role === "owner" && (
-              <td className="d-flex justify-content-around">
-                {user.role === "owner" ? (
-                  "No Actions"
-                ) : (
-                  <>
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => navigate(`/profile/${user.user.id}`)}
-                    >
-                      View
-                    </Button>
-                    {selectedUser.userId === user.user.id &&
-                      selectedUser.role !== user.role && (
-                        <Button
-                          variant="info"
-                          size="sm"
-                          onClick={() => handleUpdate(user)}
-                        >
-                          Update
-                        </Button>
-                      )}
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleDelete(user)}
-                    >
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </td>
-            )}
+            <td className="d-flex justify-content-around">
+              {projectUser?.data?.user !== user?.user?.id ? (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate(`/profile/${user.user.id}`)}
+                >
+                  View
+                </Button>
+              ) : (
+                projectUser?.data?.role !== "owner" && "No Actions"
+              )}
+              {projectUser?.data?.role === "owner" && (
+                <>
+                  {user.role === "owner" ? (
+                    "No Actions"
+                  ) : (
+                    <>
+                      {selectedUser.userId === user.user.id &&
+                        selectedUser.role !== user.role && (
+                          <Button
+                            variant="info"
+                            size="sm"
+                            onClick={() => handleUpdate(user)}
+                          >
+                            Update
+                          </Button>
+                        )}
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleDelete(user)}
+                      >
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                </>
+              )}
+            </td>
           </tr>
         ))}
       </tbody>
