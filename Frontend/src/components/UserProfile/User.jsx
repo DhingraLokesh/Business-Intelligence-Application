@@ -268,6 +268,10 @@ function User() {
                                 onChange={handleChange}
                                 placeholder="Tell us about yourself !!"
                                 rows="4"
+                                style={{
+                                  resize: "none",
+                                  height: "100px",
+                                }}
                                 as="textarea"
                               ></Form.Control>
                             </Form.Group>

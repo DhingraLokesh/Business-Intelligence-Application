@@ -10,7 +10,7 @@ const router = express.Router();
 router
   .route("/add")
   .post(
-    auth("addCommentsOfProject"),
+    auth(),
     validate(commentValidate.addCommentsOfProject),
     commentController.addCommentsOfProject
   );
@@ -19,7 +19,7 @@ router
 router
   .route("/get/:projectId")
   .get(
-    auth("getCommentsOfProject"),
+    auth(),
     validate(commentValidate.getCommentsOfProject),
     commentController.getCommentsOfProject
   );

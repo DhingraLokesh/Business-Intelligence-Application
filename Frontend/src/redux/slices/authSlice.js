@@ -9,6 +9,13 @@ const initialState = {
     loadingMessage: null,
     errorMessage: null,
   },
+  publicUser: {
+    data: {},
+    image: null,
+    loading: false,
+    loadingMessage: null,
+    errorMessage: null,
+  },
   editUser: {
     loading: false,
     loadingMessage: null,
@@ -124,6 +131,36 @@ const authSlice = createSlice({
         state.user.loading = false;
         state.user.errorMessage = action?.payload?.message;
       })
+      .addCase(getPublicUser.pending, (state) => {
+        state.publicUser.loading = true;
+        state.publicUser.loadingMessage = "Getting user ...";
+        state.publicUser.errorMessage = null;
+      })
+      .addCase(getPublicUser.fulfilled, (state, action) => {
+        state.publicUser.loading = false;
+        state.publicUser.data = action?.payload?.data;
+        state.publicUser.loadingMessage = null;
+        state.publicUser.errorMessage = null;
+      })
+      .addCase(getPublicUser.rejected, (state, action) => {
+        state.publicUser.loading = false;
+        state.publicUser.errorMessage = action?.payload?.message;
+      })
+      .addCase(getPublicUserImage.pending, (state) => {
+        state.publicUser.loading = true;
+        state.publicUser.loadingMessage = "Getting user ...";
+        state.publicUser.errorMessage = null;
+      })
+      .addCase(getPublicUserImage.fulfilled, (state, action) => { 
+        state.publicUser.loading = false;
+        state.publicUser.image = action?.payload?.data;
+        state.publicUser.loadingMessage = null;
+        state.publicUser.errorMessage = null;
+      })
+      .addCase(getPublicUserImage.rejected, (state, action) => {
+        state.publicUser.loading = false;
+        state.publicUser.errorMessage = action?.payload?.message;
+      })
       .addCase(getAllUsers.pending, (state) => {
         state.allUsers.loading = true;
         state.allUsers.loadingMessage = "Getting all users ...";
@@ -233,6 +270,30 @@ export const getUser = createAsyncThunk(
   }
 );
 
+export const getPublicUser = createAsyncThunk(
+  "auth/getPublicUser",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await axios().get(`/users/get/${payload}`);
+      return { data };
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const getPublicUserImage = createAsyncThunk(
+  "auth/getPublicUserImage",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await axios().get(`/users/get-public-image/${payload}`);
+      return { data };
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const getAllUsers = createAsyncThunk(
   "auth/getAllUsers",
   async (payload, { rejectWithValue }) => {
@@ -261,7 +322,7 @@ export const getImage = createAsyncThunk(
   "auth/getImage",
   async (payload, { rejectWithValue }) => {
     try {
-      const { data } = await axios().get("/users/getImage");
+      const { data } = await axios().get("/users/get-image");
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);

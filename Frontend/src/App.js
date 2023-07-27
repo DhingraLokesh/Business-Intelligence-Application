@@ -1,11 +1,14 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import UserProfile from "./components/UserProfile";
 import Loader from "./components/Loader";
 import Navbar from "./components/Navbar";
+
+import UserProfile from "./components/UserProfile/User";
+import PublicProfile from "./components/UserProfile/PublicProfile";
 
 import Projects from "./components/ProjectComponents/Projects";
 import ProjectUpdate from "./components/ProjectComponents/Projects/ProjectUpdate";
@@ -33,6 +36,7 @@ function App() {
         {user || loggedIn ? (
           <>
             <Route path="/profile" exact element={<UserProfile />} />
+            <Route path="/profile/:userId" exact element={<PublicProfile />} />
             <Route path="/projects" exact element={<Projects />} />
             <Route path="/requests" exact element={<Requests />} />
             <Route path="/project/create" element={<ProjectCreate />} />
