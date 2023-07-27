@@ -25,7 +25,7 @@ function PublicProfile() {
   });
 
   const { publicUser } = useSelector((state) => state.auth);
-  console.log("-----------------------", publicUser);
+
   useEffect(() => {
     dispatch(getPublicUser(userId));
     dispatch(getPublicUserImage(userId));
