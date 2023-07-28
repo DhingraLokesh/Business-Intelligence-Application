@@ -28,6 +28,11 @@ function Requests() {
       dispatch(getUser());
     }
 
+    const handleRequestFromServer = (request) => {
+      setKey(false);
+      dispatch(receiveSocketRequest(request));
+    };
+
     socket.connect();
     socket.emit("joinRequestRoom", user?.data?.id);
 
@@ -39,11 +44,6 @@ function Requests() {
       socket.off("requestFromServer", handleRequestFromServer);
     };
   }, [dispatch, user]);
-
-  const handleRequestFromServer = (request) => {
-    setKey(false);
-    dispatch(receiveSocketRequest(request));
-  };
 
   return (
     <>

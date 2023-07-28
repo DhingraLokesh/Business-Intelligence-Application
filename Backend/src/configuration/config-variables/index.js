@@ -14,7 +14,6 @@ const envVarsSchema = Joi.object()
   .keys({
     PORT: Joi.number().default(5000),
     MONGODB_URL: Joi.string().required().description("Mongo DB url"),
-    HOST_URL: Joi.string().required().description("Host url"),
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.string()
       .required()

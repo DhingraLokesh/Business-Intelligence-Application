@@ -19,7 +19,7 @@ const Comments = ({ onClose }) => {
 
   const { allComments, newComment } = useSelector((state) => state.comment);
   const { projectUser } = useSelector((state) => state.project);
-  
+
   const [comment, setComment] = useState("");
 
   useEffect(() => {
@@ -27,9 +27,13 @@ const Comments = ({ onClose }) => {
       socket.disconnect();
     };
   }, []);
-  
+
   useEffect(() => {
     const projectId = location.pathname.split("/")[2];
+
+    const handleCommentFromServer = (request) => {
+      dispatch(addCommentSocket(request));
+    };
 
     socket.connect();
     socket.emit("joinCommentRoom", projectId);
@@ -57,13 +61,8 @@ const Comments = ({ onClose }) => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [onClose]);
-  
+
   const sidebarRef = useRef(null);
-
-  const handleCommentFromServer = (request) => {
-    dispatch(addCommentSocket(request));
-  };
-
 
   const handleInputChange = (event) => {
     setComment(event.target.value);
