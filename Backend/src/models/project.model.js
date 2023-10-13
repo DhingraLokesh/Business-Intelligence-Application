@@ -28,7 +28,7 @@ const projectSchema = new Schema(
       title: {
         type: String,
       },
-      user: {
+      users: {
         type: Schema.Types.ObjectId,
         ref: "User",
       },
